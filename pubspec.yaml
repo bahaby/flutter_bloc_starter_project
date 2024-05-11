@@ -1,0 +1,103 @@
+name: flutter_bloc_starter_project
+description: "A new Flutter project."
+publish_to: 'none'
+version: 0.1.0
+
+
+environment:
+  sdk: '>=3.3.4 <4.0.0'
+
+dependencies:
+  animations: ^2.0.11
+  auto_route: ^8.1.3
+  dio: ^5.4.3+1
+  dio_http_formatter: ^3.2.1
+  dynamic_color: ^1.7.0
+  flutter:
+    sdk: flutter
+  flutter_localizations:
+    sdk: flutter
+  flutter_bloc: ^8.1.5
+  flutter_native_splash: ^2.4.0
+  flutter_secure_storage: ^9.0.0
+  formz: ^0.7.0
+  fpdart: ^1.1.0
+  freezed_annotation: ^2.4.1
+  fresh_dio: ^0.4.1
+  get_it: ^7.7.0
+  image_picker: ^1.1.1
+  injectable: ^2.4.1
+  internet_connection_checker_plus: ^2.3.0
+  hive: ^2.2.3
+  hydrated_bloc: ^9.1.5
+  json_annotation: ^4.9.0
+  json_theme: ^6.4.1+5
+  logger: ^2.2.0
+  path_provider: ^2.1.3
+  permission_handler: ^11.3.1
+  pretty_dio_logger: ^1.3.1
+  sentry_dart_plugin: ^2.0.0
+  sentry_dio: ^8.1.0
+  sentry_flutter: ^8.1.0
+  shimmer: ^3.0.0
+  slang: ^3.30.2
+  slang_flutter: ^3.30.0
+  flutter_screenutil: ^5.9.0
+  reactive_forms: ^17.0.0
+  reactive_forms_annotations: ^5.0.0
+  shared_preferences: ^2.2.3
+
+dev_dependencies:
+  flutter_test:
+    sdk: flutter
+  flutter_lints: ^3.0.2
+  build_runner: ^2.4.9
+  injectable_generator: ^2.6.1
+  freezed: ^2.5.2
+  json_serializable: ^6.8.0
+  flutter_gen_runner: ^5.4.0
+  auto_route_generator: ^8.0.0
+  flutter_launcher_icons: ^0.13.1
+  package_rename: ^1.5.3
+  reactive_forms_generator: ^5.0.0
+  slang_build_runner: ^3.30.0
+
+dependency_overrides:
+  intl: ^0.19.0
+  
+flutter:
+  uses-material-design: true
+  assets:
+    - assets/env/
+
+flutter_gen:
+  output: lib/core/generated/
+
+flutter_icons:
+  android: true
+  ios: true
+  image_path: "assets/images/splash/logo_dark.png"
+  adaptive_icon_foreground:  "assets/images/splash/logo_dark.png"
+  adaptive_icon_background: "#ffffff"
+
+flutter_native_splash:
+  color: "#ffffff"
+  image: assets/images/splash/logo_light.png
+  color_dark: "#000000"
+  image_dark: assets/images/splash/logo_dark.png
+  android_12:
+    image: assets/images/splash/logo_light.png
+    icon_background_color: "#ffffff"
+    image_dark: assets/images/splash/logo_dark.png
+    icon_background_color_dark: "#000000"
+  fullscreen: true
+
+package_rename_config:
+  android:
+    app_name: Starter App # (String) The display name of the android app
+    package_name: com.starter.app # (String) The package name of the android app
+
+  ios:
+    app_name: Starter App # (String) The display name of the ios app
+    bundle_name: com.starter.app # (String) The bundle name of the ios app
+    package_name: # (String) The product bundle identifier of the ios app

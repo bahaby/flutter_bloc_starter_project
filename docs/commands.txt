@@ -1,0 +1,15 @@
+-- To generate all generated files (freezed, json_serializable, slang etc)
+dart run build_runner build -d
+dart run build_runner watch -d (for watch mode)
+
+-- To generate only slang translate files
+dart run slang
+
+-- To generate launcher icons
+dart run flutter_launcher_icons
+
+-- To generate splash screen
+dart run flutter_native_splash:create
+
+-- To change app name, package name, etc
+dart run package_rename

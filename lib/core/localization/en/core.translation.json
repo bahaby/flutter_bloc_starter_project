@@ -1,0 +1,61 @@
+{
+    "form": {
+        "username": {
+            "label": "Username",
+            "hint": "Enter your username"
+        },
+        "password": {
+            "label": "Password",
+            "hint": "Enter your password"
+        }
+    },
+    "status": {
+        "connected": "Connected",
+        "disconnected": "Disconnected"
+    },
+    "actions": {
+        "retry": "Retry"
+    },
+    "drawer": {
+        "hello": "Hello",
+        "guest": "Guest",
+        "you_are_not_logged_in": "You are not logged in",
+        "theme_color": "Theme Color",
+        "change_the_color_of_the_app_theme": "Change the color of the app theme",
+        "theme_mode": "Theme Mode",
+        "switch_between_light_and_dark_mode": "Switch between light and dark mode",
+        "ui_language": "UI Language",
+        "change_the_language_of_the_app_ui": "Change the language of the app UI",
+        "logout": "Logout"
+    },
+    "errors": {
+        "form": {
+            "max_length": "$field cannot be more than $count characters.",
+            "min_length": "$field cannot be less than $count characters.",
+            "required": "$field is required.",
+            "email": "You entered an invalid email address."
+        },
+        "others": {
+            "no_item_found": "There is no data to show.",
+            "something_went_wrong": "Something went wrong and data couldn't loaded.",
+            "an_unknown_error": "An unknown error happened.",
+            "no_internet_connection": "Internet connectivity is not available.",
+            "server_failure": "Server failure encountered.",
+            "unauthorized_access": "Unauthorized access.",
+            "communication_error": "There was an error with our communication with the servers."
+        },
+        "cache": {
+            "not_found": "Data not found in cache.",
+            "expired": "Data expired in cache.",
+            "invalid": "Data invalid in cache.",
+            "unknown": "Unknown cache error."
+        },
+        "json_serialization": {
+            "invalid_json": "Invalid JSON data.",
+            "invalid_data": "Invalid data."
+        }
+    },
+    "api_error_codes": {
+        "c100001": "Invalid username or password."
+    }
+}

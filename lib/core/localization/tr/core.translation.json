@@ -1,0 +1,57 @@
+{
+    "form": {
+        "username": {
+            "label": "Kullanıcı Adı",
+            "hint": "Kullanıcı adınızı girin"
+        },
+        "password": {
+            "label": "Şifre",
+            "hint": "Şifrenizi girin"
+        }
+    },
+    "status": {
+        "connected": "Bağlandı",
+        "disconnected": "Bağlantı kesildi"
+    },
+    "actions": {
+        "retry": "Tekrar Dene"
+    },
+    "drawer": {
+        "hello": "Merhaba",
+        "guest": "Misafir",
+        "you_are_not_logged_in": "Giriş yapmadınız",
+        "theme_color": "Tema Rengi",
+        "change_the_color_of_the_app_theme": "Uygulama temasının rengini değiştir",
+        "theme_mode": "Tema Modu",
+        "switch_between_light_and_dark_mode": "Aydınlık ve karanlık mod arasında geçiş yapın",
+        "ui_language": "UI Dili",
+        "change_the_language_of_the_app_ui": "Uygulama UI dilini değiştirin",
+        "logout": "Çıkış Yap"
+    },
+    "errors": {
+        "form": {
+            "max_length": "$field, $count karakterden fazla olamaz.",
+            "min_length": "$field, $count karakterden az olamaz.",
+            "required": "$field gereklidir.",
+            "email": "Geçersiz bir e-posta adresi girdiniz."
+        },
+        "others": {
+            "no_item_found": "Gösterilecek veri yok.",
+            "something_went_wrong": "Bir şeyler yanlış gitti ve veri yüklenemedi.",
+            "an_unknown_error": "Bilinmeyen bir hata oluştu.",
+            "no_internet_connection": "İnternet bağlantısı mevcut değil.",
+            "server_failure": "Sunucu hatası oluştu.",
+            "unauthorized_access": "Yetkisiz erişim.",
+            "communication_error": "Sunucularla iletişimimizde bir hata oldu."
+        },
+        "cache": {
+            "not_found": "Veri önbellekte bulunamadı.",
+            "expired": "Önbellekteki veri süresi doldu.",
+            "invalid": "Önbellekteki veri geçersiz.",
+            "unknown": "Bilinmeyen önbellek hatası."
+        }
+    },
+    "api_error_codes": {
+        "c100001": "Kullanıcı adı veya şifre hatalı."
+    }
+}

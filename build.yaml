@@ -1,0 +1,31 @@
+targets:
+  $default:
+    builders:
+      freezed:
+        options:
+          map: false
+          when:
+            when: false
+            maybe_when: false
+            when_or_null: false
+      slang_build_runner:
+        options: 
+          base_locale: en
+          input_directory: lib/core/localization
+          input_file_pattern: .translation.json
+          output_directory: lib/core/generated
+          output_file_name: translations.g.dart
+          output_format: multiple_files
+          locale_handling: true
+          flutter_integration: true
+          namespaces: true
+          translate_var: tr
+          enum_name: AppLocale
+          class_name: Translations
+          translation_class_visibility: private
+          fallback_strategy: base_locale
+          key_case: camel
+          key_map_case: camel
+          param_case: camel
+          string_interpolation: dart
+          translation_overrides: true
