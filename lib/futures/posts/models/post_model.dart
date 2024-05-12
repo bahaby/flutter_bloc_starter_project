@@ -1,11 +1,10 @@
-import '../../app/models/base_model.dart';
 import 'package:freezed_annotation/freezed_annotation.dart';
 
 part 'post_model.freezed.dart';
 part 'post_model.g.dart';
 
 @freezed
-class PostModel with _$PostModel, BaseModel {
+class PostModel with _$PostModel {
   factory PostModel({
     required int id,
     required String title,
