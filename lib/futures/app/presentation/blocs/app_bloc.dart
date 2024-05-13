@@ -52,6 +52,12 @@ class AppBloc extends HydratedBloc<AppEvent, AppState>
           await _appRepository.initializeLoggedUser();
           final locale = _appRepository.locale;
           _changeLocale(locale, emit);
+          emit(state.copyWith(
+            isFirstLaunch: _appRepository.isFirstLaunch,
+            isFirstLogin: _appRepository.isFirstLogin,
+            onboardingCompleted: _appRepository.onboardingCompleted,
+          ));
+
           break;
         case _UserLogout():
           final result = await _appRepository.logout();
@@ -71,15 +77,15 @@ class AppBloc extends HydratedBloc<AppEvent, AppState>
           await _changeThemeColor(color, emit);
           break;
         case _FirstLaunchCompleted():
-          _appRepository.setIsFirstLaunch(isFirstLaunch: false);
+          _appRepository.setFirstLaunch();
           emit(state.copyWith(isFirstLaunch: false));
           break;
         case _FirstLoginCompleted():
-          _appRepository.setIsFirstLogin(isFirstLogin: false);
+          _appRepository.setFirstLogin();
           emit(state.copyWith(isFirstLogin: false));
           break;
         case _OnboardingCompleted():
-          _appRepository.setOnboardingCompleted(onboardingCompleted: true);
+          _appRepository.setOnboardingCompleted();
           emit(state.copyWith(onboardingCompleted: true));
           break;
         case _InternetStatusChanged(isConnected: bool isConnected):
