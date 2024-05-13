@@ -1,4 +1,7 @@
 {
-  "files.exclude": {
+  "explorer.fileNesting.patterns": {
+      "*.dart": "${capture}.g.dart,${capture}.config.dart,${capture}.freezed.dart,${capture}.gen.dart,${capture}.gr.dart,${capture}.gform.dart"
   },
+  "explorer.fileNesting.expand": false,
+  "explorer.expandSingleFolderWorkspaces": false,
 }

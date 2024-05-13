@@ -1,7 +1,8 @@
-import 'dart:convert';
-import 'package:flutter/services.dart';
+import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:freezed_annotation/freezed_annotation.dart';
 import 'package:injectable/injectable.dart';
+
+import 'converters/string_to_bool_converter.dart';
 
 part 'env_model.freezed.dart';
 part 'env_model.g.dart';
@@ -9,12 +10,13 @@ part 'env_model.g.dart';
 @freezed
 @singleton
 class EnvModel with _$EnvModel {
+  @JsonSerializable(fieldRename: FieldRename.snake)
   factory EnvModel({
     required String env,
-    required bool debug,
-    required bool debugShowCheckedModeBanner,
-    required bool debugShowMaterialGrid,
-    required bool debugApiClient,
+    @StringToBoolConverter() required bool debug,
+    @StringToBoolConverter() required bool debugShowCheckedModeBanner,
+    @StringToBoolConverter() required bool debugShowMaterialGrid,
+    @StringToBoolConverter() required bool debugApiClient,
     required String restApiUrl,
   }) = _EnvModel;
 
@@ -28,12 +30,10 @@ class EnvModel with _$EnvModel {
   static Future<EnvModel> create() async {
     const env = String.fromEnvironment('APP_ENV', defaultValue: 'dev');
 
-    final rawEnvData = await rootBundle.loadString(
-      'assets/env/$env.json',
-    );
-    final jsonEnvData = jsonDecode(rawEnvData) as Map<String, dynamic>;
+    await dotenv.load(fileName: '.env.$env');
+    var envMap = dotenv.env;
 
-    return EnvModel.fromJson(jsonEnvData);
+    return EnvModel.fromJson(envMap);
   }
 
   bool get isRelease => env.split('_').contains('release');
