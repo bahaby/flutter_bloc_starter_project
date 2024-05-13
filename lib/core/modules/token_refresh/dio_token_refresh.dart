@@ -1,6 +1,5 @@
-import 'dart:convert';
-
 import 'package:dio/dio.dart';
+import 'package:flutter_bloc_starter_project/core/utils/helpers/jwt_helper.dart';
 import '../hive_storage/hive_storage.dart';
 import '../../utils/methods/aliases.dart';
 import 'package:fresh_dio/fresh_dio.dart';
@@ -17,22 +16,28 @@ class DioTokenRefresh {
     _fresh = Fresh<AuthModel>(
       tokenStorage: _secureStorage,
       refreshToken: _refreshToken,
-      shouldRefresh: (response) {
-        return _isAccessTokenShoudBeRefreshed(currentAccessToken) ||
-            response?.statusCode == 401;
-      },
+      shouldRefresh: _shouldRefresh,
       tokenHeader: (token) {
         currentAccessToken = token.accessToken;
         return {'Authorization': '${token.tokenType} ${token.accessToken}'};
       },
     );
   }
-  var currentAccessToken = '';
+  String? currentAccessToken;
   final TokenStorage<AuthModel> _secureStorage;
   final HiveStorage _hiveStorage;
   late final Fresh<AuthModel> _fresh;
 
   Fresh<AuthModel> get fresh => _fresh;
+
+  bool _shouldRefresh(Response? response) {
+    final isAccessTokenShouldBeRefreshed = JwtHelper.isTokenExpiring(
+      currentAccessToken,
+      //TODO: This should be 1 min or less. This is for dummyjson api to simulate refresh token
+      durationOffset: const Duration(minutes: 1439),
+    );
+    return isAccessTokenShouldBeRefreshed || response?.statusCode == 401;
+  }
 
   Future<AuthModel> _refreshToken(AuthModel? token, Dio client) async {
     if (token == null) {
@@ -62,35 +67,6 @@ class DioTokenRefresh {
       _fresh.clearToken();
       _hiveStorage.clearAll();
       throw RevokeTokenException();
-    }
-  }
-
-  bool _isAccessTokenShoudBeRefreshed(String accessToken) {
-    try {
-      final parts = accessToken.split('.');
-      if (parts.length != 3) {
-        return true;
-      }
-
-      final payload = json.decode(
-        utf8.decode(
-          base64Url.decode(
-            base64Url.normalize(parts[1]),
-          ),
-        ),
-      );
-
-      final exp = payload['exp'];
-      if (exp == null) return true;
-
-      ///TODO: This should be 1 min or less. This is for dummyjson api to simulate refresh token
-      const durationOffset = 1439;
-      final nowPlus =
-          DateTime.now().add(const Duration(minutes: durationOffset));
-
-      return DateTime.fromMillisecondsSinceEpoch(exp * 1000).isBefore(nowPlus);
-    } catch (e) {
-      return true;
     }
   }
 }

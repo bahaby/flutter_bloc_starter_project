@@ -1,5 +1,7 @@
 import 'dart:async';
 
+import '../../../core/utils/helpers/jwt_helper.dart';
+
 import '../../../core/generated/translations.g.dart';
 import '../../../core/modules/hive_storage/hive_storage.dart';
 import '../../../core/modules/storage/app_preferences.dart';
@@ -95,8 +97,7 @@ class AppRepositoryImpl implements AppRepository {
     return exceptionHandler(() async {
       var result = await _appRemoteDataSource.logout();
       setLoggedUser(user: null);
-      await _dioTokenRefresh.fresh.clearToken();
-      await _hiveStorage.clearAll();
+      await _clearUserData();
       return right(result);
     });
   }
@@ -135,14 +136,22 @@ class AppRepositoryImpl implements AppRepository {
 
   @override
   Future<Either<AlertModel, void>> initializeLoggedUser() async {
-    final token = await _dioTokenRefresh.fresh.token;
-    final user = token?.user;
-    if (user != null) {
-      _loggedUserController.add(user);
-      _authStatusController.add(AuthStatus.authenticated);
+    final authModel = await _dioTokenRefresh.fresh.token;
+    final user = authModel?.user;
+    final refreshToken = authModel?.refreshToken;
+
+    if (user == null || JwtHelper.isTokenExpiring(refreshToken)) {
+      await _clearUserData();
+      setLoggedUser(user: null);
     } else {
-      _authStatusController.add(AuthStatus.unauthenticated);
+      setLoggedUser(user: user);
     }
+
     return right(null);
+  }
+
+  Future<void> _clearUserData() async {
+    await _dioTokenRefresh.fresh.clearToken();
+    await _hiveStorage.clearAll();
   }
 }
