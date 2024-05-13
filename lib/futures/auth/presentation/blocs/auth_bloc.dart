@@ -1,5 +1,3 @@
-import 'dart:async';
-
 import 'package:flutter_bloc/flutter_bloc.dart';
 import '../../../app/models/alert_model.dart';
 import '../../../app/repositories/app_repository.dart';
@@ -17,17 +15,12 @@ class AuthBloc extends Bloc<AuthEvent, AuthState> {
   final AuthRepository _authRepository;
   final AppRepository _appRepository;
 
-  late StreamSubscription<AuthenticationStatus> _authStatusSubscription;
-
   AuthBloc({
     required AuthRepository authRepository,
     required AppRepository appRepository,
   })  : _authRepository = authRepository,
         _appRepository = appRepository,
         super(const AuthState.initial()) {
-    _authStatusSubscription = _authRepository.authStatus.listen((event) async {
-      add(AuthEvent.statusChanged(event));
-    });
     on<AuthEvent>((event, emit) async {
       _appRepository.setGlobalState(
           state: GlobalState.loadingInteractionDisabled);
@@ -47,11 +40,5 @@ class AuthBloc extends Bloc<AuthEvent, AuthState> {
       }
       _appRepository.setGlobalState(state: GlobalState.loaded);
     });
-  }
-
-  @override
-  Future<void> close() {
-    _authStatusSubscription.cancel();
-    return super.close();
   }
 }
