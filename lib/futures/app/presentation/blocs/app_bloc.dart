@@ -49,8 +49,6 @@ class AppBloc extends HydratedBloc<AppEvent, AppState>
     on<AppEvent>((event, emit) async {
       switch (event) {
         case _Started():
-          await _appRepository.initializeLoggedUser();
-          await _appRepository.initializeTranslationOverrides();
           final locale = _appRepository.locale;
           _changeLocale(locale, emit);
           emit(state.copyWith(
@@ -58,6 +56,8 @@ class AppBloc extends HydratedBloc<AppEvent, AppState>
             isFirstLogin: _appRepository.isFirstLogin,
             onboardingCompleted: _appRepository.onboardingCompleted,
           ));
+          await _appRepository.initializeLoggedUser();
+          await _appRepository.initializeTranslationOverrides();
 
           break;
         case _UserLogout():

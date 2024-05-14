@@ -4,8 +4,6 @@ part of 'auth_bloc.dart';
 class AuthState with _$AuthState {
   const factory AuthState.initial() = Initial;
   const factory AuthState.loading() = Loading;
-
-  const factory AuthState.authenticated() = Authenticated;
-  const factory AuthState.unauthenticated() = Unauthenticated;
+  const factory AuthState.success() = Success;
   const factory AuthState.failed({required AlertModel alert}) = Failed;
 }
