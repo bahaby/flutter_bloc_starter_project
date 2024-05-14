@@ -10,7 +10,7 @@ part 'env_model.g.dart';
 @freezed
 @singleton
 class EnvModel with _$EnvModel {
-  @JsonSerializable(fieldRename: FieldRename.snake)
+  @JsonSerializable(fieldRename: FieldRename.screamingSnake)
   factory EnvModel({
     required String env,
     @StringToBoolConverter() required bool debug,
@@ -30,7 +30,7 @@ class EnvModel with _$EnvModel {
   static Future<EnvModel> create() async {
     const env = String.fromEnvironment('APP_ENV', defaultValue: 'dev');
 
-    await dotenv.load(fileName: '.env.$env');
+    await dotenv.load(fileName: 'env/$env.env');
     var envMap = dotenv.env;
 
     return EnvModel.fromJson(envMap);
