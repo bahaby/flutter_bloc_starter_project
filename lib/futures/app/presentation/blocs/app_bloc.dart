@@ -50,6 +50,7 @@ class AppBloc extends HydratedBloc<AppEvent, AppState>
       switch (event) {
         case _Started():
           await _appRepository.initializeLoggedUser();
+          await _appRepository.initializeTranslationOverrides();
           final locale = _appRepository.locale;
           _changeLocale(locale, emit);
           emit(state.copyWith(

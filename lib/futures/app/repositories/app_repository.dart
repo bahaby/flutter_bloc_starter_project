@@ -38,6 +38,7 @@ abstract interface class AppRepository {
   void setOnboardingCompleted();
 
   Future<Either<AlertModel, void>> initializeLoggedUser();
+  Future<Either<AlertModel, void>> initializeTranslationOverrides();
   Stream<GlobalState> get globalState;
   Stream<UserModel?> get loggedUser;
   Stream<AuthStatus> get authStatus;
@@ -99,6 +100,21 @@ class AppRepositoryImpl implements AppRepository {
       setLoggedUser(user: null);
       await _clearUserData();
       return right(result);
+    });
+  }
+
+  @override
+  Future<Either<AlertModel, void>> initializeTranslationOverrides() async {
+    return exceptionHandler(() async {
+      for (var locale in AppLocale.values) {
+        final result = await _appRemoteDataSource.translateOverrides(locale);
+        LocaleSettings.overrideTranslationsFromMap(
+          locale: locale,
+          isFlatMap: false,
+          map: result,
+        );
+      }
+      return right(null);
     });
   }
 
