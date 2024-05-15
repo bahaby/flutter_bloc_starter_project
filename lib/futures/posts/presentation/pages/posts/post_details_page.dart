@@ -2,7 +2,7 @@ import 'package:auto_route/auto_route.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import '../../../../../core/generated/translations.g.dart';
-import '../../../../../core/utils/helpers/bar_helper.dart';
+import '../../../../../core/utils/helpers/snack_bar_helper.dart';
 import '../../../../app/presentation/blocs/generic_fetch_bloc/generic_fetch_bloc.dart';
 import '../../../models/post_model.dart';
 import '../../widgets/post_detail_shimmer.dart';
@@ -36,7 +36,8 @@ class _PostDetailsPageState extends State<PostDetailsPage> {
       listener: (context, state) {
         switch (state) {
           case Failed(:final alert):
-            BarHelper.showAlert(
+            context.router.maybePop();
+            SnackBarHelper.showAlert(
               context,
               alert: alert,
             );

@@ -3,13 +3,13 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import '../../../../../core/generated/translations.g.dart';
 import '../../../../../core/utils/extensions/build_context_extensions.dart';
+import '../../../../../core/utils/helpers/snack_bar_helper.dart';
 import '../../../../app/presentation/widgets/customs/custom_textfield.dart';
 import '../../blocs/auth_bloc.dart';
 import '../../forms/login_form.dart';
 import '../../../../../../core/theme/dimens/app_dimen.dart';
 
 import '../../../../../../core/theme/dimens/dimens.dart';
-import '../../../../../core/utils/helpers/bar_helper.dart';
 
 @RoutePage()
 class LoginPage extends StatefulWidget {
@@ -33,7 +33,7 @@ class _LoginPageState extends State<LoginPage> {
         listener: (context, state) {
           switch (state) {
             case Failed(:final alert):
-              BarHelper.showAlert(
+              SnackBarHelper.showAlert(
                 context,
                 alert: alert,
               );
