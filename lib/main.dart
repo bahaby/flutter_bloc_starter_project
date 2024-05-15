@@ -59,14 +59,6 @@ Future<void> main() async {
             : await getApplicationDocumentsDirectory(),
       );
 
-      // Translation override example.
-      /* LocaleSettings.overrideTranslations(
-          locale: AppLocale.en, fileType: FileType.json, content: """
-        {
-          "auth": {
-            "login_button": "Login2"
-          }
-        }"""); */
       return runApp(
         // Sentrie's performance tracing for AssetBundles.
         DefaultAssetBundle(

@@ -9,25 +9,16 @@ import 'package:sentry_flutter/sentry_flutter.dart';
 import '../../../../core/modules/dependency_injection/di.dart';
 import '../../../../core/utils/constants.dart';
 import '../../../../core/utils/methods/aliases.dart';
-import '../../../auth/presentation/blocs/auth_bloc.dart';
 
 class App extends StatelessWidget {
   const App({super.key});
 
   @override
   Widget build(BuildContext context) {
-    return MultiBlocProvider(
-      // add singleton blocs here
-      providers: [
-        BlocProvider(
-          create: (context) => di<AppBloc>(),
-        ),
-        BlocProvider(
-          create: (context) => di<AuthBloc>(),
-        ),
-      ],
+    return BlocProvider(
+      create: (context) => di<AppBloc>(),
       child: BlocBuilder<AppBloc, AppState>(
-        buildWhen: (p, c) => p.theme != c.theme || p.locale != c.locale,
+        buildWhen: (p, c) => p.theme != c.theme,
         builder: (context, state) {
           return MaterialApp.router(
             /// Theme configuration.

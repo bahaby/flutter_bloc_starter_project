@@ -1,3 +1,4 @@
+import '../../../core/exception/exception_types.dart';
 import '../../../core/exception/exceptions.dart';
 import '../../../core/modules/hive_storage/hive_storage.dart';
 import '../../app/models/paginated_model.dart';

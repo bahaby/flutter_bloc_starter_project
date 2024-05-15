@@ -2,7 +2,6 @@ import '../../app/models/alert_model.dart';
 import '../../app/models/auth_model.dart';
 import '../../app/models/user_model.dart';
 import 'package:fpdart/fpdart.dart';
-import 'package:fresh_dio/fresh_dio.dart';
 import 'package:injectable/injectable.dart';
 
 import '../../../core/exception/exception_handler.dart';
@@ -11,7 +10,6 @@ import '../../app/repositories/app_repository.dart';
 import '../data_sources/auth_remote_data_source.dart';
 
 abstract interface class AuthRepository {
-  Stream<AuthenticationStatus> get authStatus;
   Future<Either<AlertModel, AuthModel>> login({
     required String email,
     required String password,
@@ -33,10 +31,6 @@ class AuthRepositoryImpl implements AuthRepository {
   })  : _remoteDataSource = remoteDataSource,
         _dioTokenRefresh = dioTokenRefresh,
         _appRepository = appRepository;
-
-  @override
-  Stream<AuthenticationStatus> get authStatus =>
-      _dioTokenRefresh.fresh.authenticationStatus;
 
   @override
   Future<Either<AlertModel, AuthModel>> login({

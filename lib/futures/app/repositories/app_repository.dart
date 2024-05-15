@@ -33,11 +33,12 @@ abstract interface class AppRepository {
   void setGlobalState({required GlobalState state});
   void setLoggedUser({required UserModel? user});
   void setLocale({required AppLocale locale});
-  void setIsFirstLaunch({required bool isFirstLaunch});
-  void setIsFirstLogin({required bool isFirstLogin});
-  void setOnboardingCompleted({required bool onboardingCompleted});
+  void setFirstLaunch();
+  void setFirstLogin();
+  void setOnboardingCompleted();
 
   Future<Either<AlertModel, void>> initializeLoggedUser();
+  Future<Either<AlertModel, void>> initializeTranslationOverrides();
   Stream<GlobalState> get globalState;
   Stream<UserModel?> get loggedUser;
   Stream<AuthStatus> get authStatus;
@@ -103,6 +104,21 @@ class AppRepositoryImpl implements AppRepository {
   }
 
   @override
+  Future<Either<AlertModel, void>> initializeTranslationOverrides() async {
+    return exceptionHandler(() async {
+      for (var locale in AppLocale.values) {
+        final result = await _appRemoteDataSource.translateOverrides(locale);
+        LocaleSettings.overrideTranslationsFromMap(
+          locale: locale,
+          isFlatMap: false,
+          map: result,
+        );
+      }
+      return right(null);
+    });
+  }
+
+  @override
   void setGlobalState({required GlobalState state}) {
     _globalStateController.add(state);
   }
@@ -120,18 +136,18 @@ class AppRepositoryImpl implements AppRepository {
   }
 
   @override
-  void setIsFirstLaunch({required bool isFirstLaunch}) {
-    _appPreferences.saveIsFirsLaunchApp(isFirstLaunch);
+  void setFirstLaunch() {
+    _appPreferences.saveIsFirsLaunchApp(false);
   }
 
   @override
-  void setIsFirstLogin({required bool isFirstLogin}) {
-    _appPreferences.saveIsFirstLogin(isFirstLogin);
+  void setFirstLogin() {
+    _appPreferences.saveIsFirstLogin(false);
   }
 
   @override
-  void setOnboardingCompleted({required bool onboardingCompleted}) {
-    _appPreferences.saveOnboardingCompleted(onboardingCompleted);
+  void setOnboardingCompleted() {
+    _appPreferences.saveOnboardingCompleted(true);
   }
 
   @override

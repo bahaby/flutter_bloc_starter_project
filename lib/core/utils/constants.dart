@@ -156,7 +156,7 @@ class _Palette {
 class _Theme {
   final tryToGetColorPaletteFromWallpaper = true;
   final defaultThemeColor = const Color(0xFF0000FF);
-  final defaultFontFamily = 'Nunito';
+  final defaultFontFamily = 'Ubuntu';
   final double defaultElevation = 0;
   final double defaultBorderRadius = 24;
 }
