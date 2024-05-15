@@ -7,33 +7,6 @@ import '../../generated/translations.g.dart';
 abstract class BarHelper {
   const BarHelper._();
 
-  static void showNetworkAlert(
-    BuildContext context, {
-    required bool isConnected,
-  }) {
-    final message = isConnected
-        ? context.tr.core.status.connected
-        : context.tr.core.status.disconnected;
-    final color =
-        isConnected ? const Color(0xFF40DBA3) : const Color(0xFFE4756D);
-    final iconData = isConnected ? Icons.check_circle : Icons.error;
-    final bar = _createAlertModal(
-      message: message,
-      iconWidget: Icon(
-        iconData,
-        color: Colors.white,
-      ),
-      duration: const Duration(seconds: 1),
-      margin: EdgeInsets.zero,
-      borderRadius: const BorderRadius.all(Radius.zero),
-      messageSize: 16,
-      color: color,
-      barPosition: BarPosition.bottom,
-    );
-
-    bar.show(context);
-  }
-
   static void showAlert(
     BuildContext context, {
     required AlertModel alert,
