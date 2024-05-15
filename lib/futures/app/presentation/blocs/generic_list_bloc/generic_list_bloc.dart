@@ -11,9 +11,9 @@ part 'generic_list_bloc.freezed.dart';
 class GenericListBloc<T>
     extends Bloc<GenericListEvent<T>, GenericListState<T>> {
   final _limit = constants.api.maxItemToBeFetchedAtOneTime;
-  final BaseRepository<T> _repository;
+  final DataRepository<T> _repository;
   GenericListBloc({
-    required BaseRepository<T> repository,
+    required DataRepository<T> repository,
   })  : _repository = repository,
         super(GenericListState<T>.initial()) {
     on<GenericListEvent<T>>((event, emit) async {

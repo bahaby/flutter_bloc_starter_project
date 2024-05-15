@@ -68,9 +68,9 @@ SPEC CHECKSUMS:
   Flutter: e0871f40cf51350855a761d2e70bf5af5b9b5de7
   flutter_native_splash: edf599c81f74d093a4daf8e17bd7a018854bc778
   flutter_secure_storage: d33dac7ae2ea08509be337e775f6b59f1ff45f12
-  image_picker_ios: b545a5f16c0fa88e3ecbbce3ed4de45567a8ec18
+  image_picker_ios: c560581cceedb403a6ff17f2f816d7fea1421fc1
   package_info_plus: 58f0028419748fad15bf008b270aaa8e54380b1c
-  path_provider_foundation: 3784922295ac71e43754bd15e0653ccfd36a147c
+  path_provider_foundation: 2b6b4c569c0fb62ec74538f866245ac84301af46
   permission_handler_apple: 9878588469a2b0d0fc1e048d9f43605f92e6cec2
   Sentry: 51b056d96914a741f63eca774d118678b1eb05a1
   sentry_flutter: e8397d13e297a5d4b6be8a752e33140b21c5cc97
