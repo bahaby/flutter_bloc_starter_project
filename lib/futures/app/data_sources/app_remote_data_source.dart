@@ -5,6 +5,8 @@ import 'package:flutter_bloc_starter_project/core/exception/exceptions.dart';
 import 'package:flutter_bloc_starter_project/core/generated/translations.g.dart';
 import 'package:injectable/injectable.dart';
 
+import '../../../core/exception/exception_types.dart';
+
 abstract interface class AppRemoteDataSource {
   Future<void> logout();
   Future<Map<String, dynamic>> translateOverrides(AppLocale locale);

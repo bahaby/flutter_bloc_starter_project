@@ -1,3 +1,4 @@
+import 'exception_types.dart';
 import 'exceptions.dart';
 import '../utils/methods/aliases.dart';
 import '../utils/router.gr.dart';
