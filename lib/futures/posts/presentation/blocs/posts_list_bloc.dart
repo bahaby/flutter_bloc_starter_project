@@ -6,6 +6,6 @@ import '../../models/post_model.dart';
 
 @injectable
 class PostsListBloc extends GenericListBloc<PostModel> {
-  PostsListBloc(BaseRepository<PostModel> repository)
+  PostsListBloc(DataRepository<PostModel> repository)
       : super(repository: repository);
 }

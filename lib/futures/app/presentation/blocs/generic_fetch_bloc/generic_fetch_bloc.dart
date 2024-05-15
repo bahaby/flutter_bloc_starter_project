@@ -10,9 +10,9 @@ part 'generic_fetch_bloc.freezed.dart';
 
 class GenericFetchBloc<T>
     extends Bloc<GenericFetchEvent<T>, GenericFetchState<T>> {
-  final BaseRepository<T> _repository;
+  final DataRepository<T> _repository;
   GenericFetchBloc({
-    required BaseRepository<T> repository,
+    required DataRepository<T> repository,
   })  : _repository = repository,
         super(const GenericFetchState.initial()) {
     on<GenericFetchEvent<T>>((event, emit) async {

@@ -10,7 +10,7 @@ import '../data_sources/posts_local_data_source.dart';
 import '../data_sources/posts_remote_data_source.dart';
 import '../models/post_model.dart';
 
-abstract interface class PostsRepository implements BaseRepository<PostModel> {
+abstract interface class PostsRepository implements DataRepository<PostModel> {
   @override
   Future<Either<AlertModel, PaginatedModel<PostModel>>> list({
     required int skip,
@@ -21,7 +21,7 @@ abstract interface class PostsRepository implements BaseRepository<PostModel> {
   Future<Either<AlertModel, PostModel>> getSingle(int id);
 }
 
-@LazySingleton(as: BaseRepository<PostModel>)
+@LazySingleton(as: DataRepository<PostModel>)
 class PostsRepositoryImpl implements PostsRepository {
   final PostsRemoteDataSource _remoteDataSource;
   final PostsLocalDataSource _localDataSource;
