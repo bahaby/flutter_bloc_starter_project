@@ -1,6 +1,7 @@
 import 'package:dio/dio.dart';
+import 'package:flutter_bloc_starter_project/core/modules/storage/objectbox_storage.dart';
 import 'package:flutter_bloc_starter_project/core/utils/helpers/jwt_helper.dart';
-import '../hive_storage/hive_storage.dart';
+import 'package:flutter_bloc_starter_project/futures/posts/models/post_model.dart';
 import '../../utils/methods/aliases.dart';
 import 'package:fresh_dio/fresh_dio.dart';
 import 'package:injectable/injectable.dart';
@@ -11,7 +12,7 @@ import '../../../futures/app/models/auth_model.dart';
 class DioTokenRefresh {
   DioTokenRefresh(
     this._secureStorage,
-    this._hiveStorage,
+    this._objectBoxStorage,
   ) {
     _fresh = Fresh<AuthModel>(
       tokenStorage: _secureStorage,
@@ -25,7 +26,7 @@ class DioTokenRefresh {
   }
   String? currentAccessToken;
   final TokenStorage<AuthModel> _secureStorage;
-  final HiveStorage _hiveStorage;
+  final ObjectBoxStorage _objectBoxStorage;
   late final Fresh<AuthModel> _fresh;
 
   Fresh<AuthModel> get fresh => _fresh;
@@ -65,7 +66,7 @@ class DioTokenRefresh {
       return newToken;
     } catch (e) {
       _fresh.clearToken();
-      _hiveStorage.clearAll();
+      _objectBoxStorage.clear<PostModel>();
       throw RevokeTokenException();
     }
   }

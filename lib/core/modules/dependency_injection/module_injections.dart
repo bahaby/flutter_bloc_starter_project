@@ -7,19 +7,17 @@ import 'package:internet_connection_checker_plus/internet_connection_checker_plu
 import 'package:path_provider/path_provider.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
+import '../../generated/objectbox.g.dart';
 import '../dio/dio_client.dart';
-import '../hive_storage/adapters/post_adapter.dart';
 import '../token_refresh/dio_token_refresh.dart';
 
 @module
 abstract class ModuleInjections {
   @preResolve
-  @lazySingleton
-  Future<HiveInterface> hive() async {
-    Directory appDocDir = await getApplicationDocumentsDirectory();
-    Hive.init("${appDocDir.path}/hive");
-    Hive.registerAdapter(PostAdaper());
-    return Hive;
+  Future<Store> getStore() async {
+    final dir = await getApplicationDocumentsDirectory();
+
+    return Store(getObjectBoxModel(), directory: '${dir.path}/objectbox');
   }
 
   FlutterSecureStorage storage() => const FlutterSecureStorage(

@@ -1,7 +1,7 @@
 import 'package:flutter_bloc/flutter_bloc.dart';
 import '../../../../../core/utils/constants.dart';
 import '../../../models/alert_model.dart';
-import '../../../repositories/base_repository.dart';
+import '../../../repositories/repository.dart';
 import 'package:freezed_annotation/freezed_annotation.dart';
 
 part 'generic_list_event.dart';
@@ -29,10 +29,10 @@ class GenericListBloc<T>
             },
           );
           break;
-        case _LoadMore(:final posts):
+        case _LoadMore(:final items):
           final lastState = state;
-          final skip = posts.length;
-          emit(GenericListState<T>.loadingMore(posts));
+          final skip = items.length;
+          emit(GenericListState<T>.loadingMore(items));
           final result = await _repository.list(limit: _limit, skip: skip);
           result.fold(
             (left) {
@@ -40,7 +40,7 @@ class GenericListBloc<T>
               emit(lastState);
             },
             (right) {
-              final newPosts = posts + right.posts;
+              final newPosts = items + right.posts;
               final hasMore = right.total > newPosts.length;
               emit(GenericListState<T>.loaded(newPosts, hasMore: hasMore));
             },

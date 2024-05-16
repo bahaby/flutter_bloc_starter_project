@@ -48,9 +48,6 @@ Future<void> main() async {
         ],
       );
 
-      // Inits sentry for error tracking.
-      await initializeSentry();
-
       // Set bloc observer and hydrated bloc storage.
       Bloc.observer = CustomBlocObserver();
       HydratedBloc.storage = await HydratedStorage.build(
@@ -58,6 +55,9 @@ Future<void> main() async {
             ? HydratedStorage.webStorageDirectory
             : await getApplicationDocumentsDirectory(),
       );
+
+      // Inits sentry for error tracking.
+      await initializeSentry();
 
       return runApp(
         // Sentrie's performance tracing for AssetBundles.

@@ -1,9 +1,11 @@
 import 'dart:async';
 
+import 'package:flutter_bloc_starter_project/core/modules/storage/objectbox_storage.dart';
+import 'package:flutter_bloc_starter_project/futures/posts/models/post_model.dart';
+
 import '../../../core/utils/helpers/jwt_helper.dart';
 
 import '../../../core/generated/translations.g.dart';
-import '../../../core/modules/hive_storage/hive_storage.dart';
 import '../../../core/modules/storage/app_preferences.dart';
 import '../models/user_model.dart';
 import '../presentation/blocs/app_bloc.dart';
@@ -52,16 +54,16 @@ abstract interface class AppRepository {
 class AppRepositoryImpl implements AppRepository {
   final AppRemoteDataSource _appRemoteDataSource;
   final DioTokenRefresh _dioTokenRefresh;
-  final HiveStorage _hiveStorage;
+  final ObjectBoxStorage _objectBoxStorage;
   final AppPreferences _appPreferences;
 
   AppRepositoryImpl({
     required AppRemoteDataSource appRemoteDataSource,
     required DioTokenRefresh dioTokenRefresh,
-    required HiveStorage hiveStorage,
+    required ObjectBoxStorage objectBoxStorage,
     required AppPreferences appPreferences,
   })  : _appRemoteDataSource = appRemoteDataSource,
-        _hiveStorage = hiveStorage,
+        _objectBoxStorage = objectBoxStorage,
         _appPreferences = appPreferences,
         _dioTokenRefresh = dioTokenRefresh;
 
@@ -168,6 +170,6 @@ class AppRepositoryImpl implements AppRepository {
 
   Future<void> _clearUserData() async {
     await _dioTokenRefresh.fresh.clearToken();
-    await _hiveStorage.clearAll();
+    await _objectBoxStorage.clear<PostModel>();
   }
 }

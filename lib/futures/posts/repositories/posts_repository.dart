@@ -5,7 +5,7 @@ import 'package:internet_connection_checker_plus/internet_connection_checker_plu
 
 import '../../../core/exception/exception_handler.dart';
 import '../../app/models/alert_model.dart';
-import '../../app/repositories/base_repository.dart';
+import '../../app/repositories/repository.dart';
 import '../data_sources/posts_local_data_source.dart';
 import '../data_sources/posts_remote_data_source.dart';
 import '../models/post_model.dart';

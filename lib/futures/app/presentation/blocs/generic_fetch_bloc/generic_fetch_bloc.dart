@@ -2,7 +2,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:freezed_annotation/freezed_annotation.dart';
 
 import '../../../models/alert_model.dart';
-import '../../../repositories/base_repository.dart';
+import '../../../repositories/repository.dart';
 
 part 'generic_fetch_event.dart';
 part 'generic_fetch_state.dart';

@@ -1,6 +1,4 @@
-import '../../../core/exception/exception_types.dart';
-import '../../../core/exception/exceptions.dart';
-import '../../../core/modules/hive_storage/hive_storage.dart';
+import 'package:flutter_bloc_starter_project/core/modules/storage/objectbox_storage.dart';
 import '../../app/models/paginated_model.dart';
 import 'package:injectable/injectable.dart';
 
@@ -16,46 +14,36 @@ abstract interface class PostsLocalDataSource {
 
 @LazySingleton(as: PostsLocalDataSource)
 class PostsLocalDataSourceImpl implements PostsLocalDataSource {
-  final HiveStorage _hiveStorage;
+  final ObjectBoxStorage _objectBoxStorage;
 
-  PostsLocalDataSourceImpl({required HiveStorage hiveStorage})
-      : _hiveStorage = hiveStorage;
+  PostsLocalDataSourceImpl({required ObjectBoxStorage objectBoxStorage})
+      : _objectBoxStorage = objectBoxStorage;
 
   @override
   Future<void> savePosts(List<PostModel> posts, int skip) async {
-    await _hiveStorage.putAll(posts, skip);
+    await _objectBoxStorage.putAll(posts);
   }
 
   @override
   Future<PaginatedModel<PostModel>> getPosts(int skip, int limit) async {
-    final posts = await _hiveStorage.getAll<PostModel>();
-    final paginatedPosts = PaginatedModel<PostModel>(
-      total: posts.length,
-      limit: limit,
-      skip: skip,
-      posts: posts.skip(skip).take(limit).toList(),
-    );
-    return paginatedPosts;
+    final posts = await _objectBoxStorage.list<PostModel>(skip, limit);
+    return posts;
   }
 
   @override
   Future<void> saveSinglePost(PostModel post) async {
-    await _hiveStorage.put(post.id.toString(), post);
+    await _objectBoxStorage.save(post);
   }
 
   @override
   Future<PostModel> getSinglePost(int id) async {
-    final post = await _hiveStorage.get<PostModel>(id.toString());
+    final post = await _objectBoxStorage.get<PostModel>(id);
 
-    if (post != null) {
-      return post;
-    }
-
-    throw CacheException(type: CacheExceptionType.notFound, payload: id);
+    return post;
   }
 
   @override
   Future<void> clear() async {
-    await _hiveStorage.clear();
+    await _objectBoxStorage.clear();
   }
 }
