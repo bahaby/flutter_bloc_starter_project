@@ -1,72 +1,34 @@
-import '../../app/models/paginated_model.dart';
-import 'package:fpdart/fpdart.dart';
+import 'package:flutter_bloc_starter_project/core/data/local_data_source.dart';
+import 'package:flutter_bloc_starter_project/core/data/model_binding.dart';
 import 'package:injectable/injectable.dart';
 import 'package:internet_connection_checker_plus/internet_connection_checker_plus.dart';
-
-import '../../../core/exception/exception_handler.dart';
-import '../../app/models/alert_model.dart';
+import '../../../core/data/remote_data_source.dart';
 import '../../app/repositories/repository.dart';
-import '../data_sources/posts_local_data_source.dart';
-import '../data_sources/posts_remote_data_source.dart';
 import '../models/post_model.dart';
 
-abstract interface class PostsRepository implements DataRepository<PostModel> {
+@LazySingleton(as: ModelBindings<PostModel>)
+class PostModelBinding implements ModelBindings<PostModel> {
   @override
-  Future<Either<AlertModel, PaginatedModel<PostModel>>> list({
-    required int skip,
-    required int limit,
-  });
+  PostModel fromJson(Map<String, Object?> json) => PostModel.fromJson(json);
 
   @override
-  Future<Either<AlertModel, PostModel>> getSingle(int id);
+  int? getId(PostModel obj) => obj.id;
+
+  @override
+  int sortDesc(PostModel a, PostModel b) => a.id.compareTo(b.id);
+
+  @override
+  Map<String, Object?> toJson(PostModel obj) => obj.toJson();
 }
 
 @LazySingleton(as: DataRepository<PostModel>)
-class PostsRepositoryImpl implements PostsRepository {
-  final PostsRemoteDataSource _remoteDataSource;
-  final PostsLocalDataSource _localDataSource;
-  final InternetConnection _networkInfo;
-
-  PostsRepositoryImpl({
-    required PostsRemoteDataSource remoteDataSource,
-    required PostsLocalDataSource localDataSource,
-    required InternetConnection networkInfo,
-  })  : _remoteDataSource = remoteDataSource,
-        _localDataSource = localDataSource,
-        _networkInfo = networkInfo;
-
-  @override
-  Future<Either<AlertModel, PaginatedModel<PostModel>>> list({
-    required int skip,
-    required int limit,
-  }) async {
-    return exceptionHandler(() async {
-      if (await _networkInfo.hasInternetAccess) {
-        final posts =
-            await _remoteDataSource.getPosts(skip: skip, limit: limit);
-        await _localDataSource.savePosts(posts.posts, skip);
-        return right(posts);
-      } else {
-        final cachedPosts = await _localDataSource.getPosts(skip, limit);
-        return right(cachedPosts);
-      }
-    });
-  }
-
-  @override
-  Future<Either<AlertModel, PostModel>> getSingle(
-    int id,
-  ) async {
-    return exceptionHandler(() async {
-      if (await _networkInfo.hasInternetAccess) {
-        final post = await _remoteDataSource.getSinglePost(id: id);
-        await _localDataSource.saveSinglePost(post);
-        return right(post);
-      } else {
-        final cachedPost = await _localDataSource.getSinglePost(id);
-
-        return right(cachedPost);
-      }
-    });
-  }
+class PostsRepository extends DataRepository<PostModel> {
+  PostsRepository({
+    required InternetConnection super.networkInfo,
+  }) : super(
+          localDataSource: LocalDataSource<PostModel>(),
+          remoteDataSource: RemoteDataSource<PostModel>(
+            basePath: 'posts',
+          ),
+        );
 }

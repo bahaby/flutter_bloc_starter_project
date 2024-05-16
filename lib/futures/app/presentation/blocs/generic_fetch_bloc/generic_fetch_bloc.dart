@@ -19,7 +19,7 @@ class GenericFetchBloc<T>
       switch (event) {
         case _Refresh():
           emit(const GenericFetchState.loading());
-          final result = await _repository.getSingle(event.id);
+          final result = await _repository.get(event.id);
           result.fold(
             (left) => emit(GenericFetchState.failed(left)),
             (right) => emit(GenericFetchState.loaded(right)),
