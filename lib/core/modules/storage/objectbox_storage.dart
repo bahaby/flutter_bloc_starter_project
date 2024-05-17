@@ -1,5 +1,3 @@
-import 'dart:io';
-
 import 'package:flutter_bloc_starter_project/futures/app/models/paginated_model.dart';
 import 'package:injectable/injectable.dart';
 
@@ -43,7 +41,7 @@ class ObjectBoxStorage {
       total: total,
       limit: limit,
       skip: skip,
-      posts: items,
+      items: items,
     );
   }
 

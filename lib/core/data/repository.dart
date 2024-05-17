@@ -1,19 +1,30 @@
-import 'package:flutter_bloc_starter_project/core/modules/dependency_injection/di.dart';
 import 'package:flutter_bloc_starter_project/core/data/local_data_source.dart';
 import 'package:flutter_bloc_starter_project/core/data/remote_data_source.dart';
 import 'package:internet_connection_checker_plus/internet_connection_checker_plus.dart';
 
-import '../../../core/exception/exception_handler.dart';
-import '../models/alert_model.dart';
-import '../models/paginated_model.dart';
+import '../exception/exception_handler.dart';
+import '../../futures/app/models/alert_model.dart';
+import '../../futures/app/models/paginated_model.dart';
 import 'package:fpdart/fpdart.dart';
 
-abstract class DataRepository<T> {
+abstract interface class ModelBindings<T> {
+  const ModelBindings();
+
+  int? getId(T obj);
+
+  Map<String, Object?> toJson(T obj);
+
+  T fromJson(Map<String, Object?> json);
+
+  int sortDesc(T a, T b);
+}
+
+abstract class Repository<T> {
   final RemoteDataSource<T> _remoteDataSource;
   final LocalDataSource<T> _localDataSource;
   final InternetConnection _networkInfo;
 
-  DataRepository({
+  Repository({
     required networkInfo,
     required RemoteDataSource<T> remoteDataSource,
     required LocalDataSource<T> localDataSource,
@@ -26,9 +37,7 @@ abstract class DataRepository<T> {
     return exceptionHandler(() async {
       if (await _networkInfo.hasInternetAccess) {
         final items = await _remoteDataSource.list(skip: skip, limit: limit);
-        for (var element in items.posts) {
-          await _localDataSource.save(element);
-        }
+        await _localDataSource.saveAll(items.items);
         return right(items);
       } else {
         final cachedItems =
