@@ -10,7 +10,7 @@ class PaginatedModel<T> with _$PaginatedModel<T> {
     required int limit,
     required int skip,
     required int total,
-    required List<T> posts,
+    required List<T> items,
   }) = _PaginatedModel;
 
   factory PaginatedModel.fromJson(
@@ -21,5 +21,5 @@ class PaginatedModel<T> with _$PaginatedModel<T> {
   }
 
   factory PaginatedModel.initial() =>
-      PaginatedModel<T>(skip: 0, limit: 100, total: 100, posts: <T>[]);
+      PaginatedModel<T>(skip: 0, limit: 100, total: 100, items: <T>[]);
 }

@@ -1,7 +1,7 @@
 import 'package:flutter_bloc/flutter_bloc.dart';
 import '../../../../../core/utils/constants.dart';
 import '../../../models/alert_model.dart';
-import '../../../repositories/base_repository.dart';
+import '../../../../../core/data/repository.dart';
 import 'package:freezed_annotation/freezed_annotation.dart';
 
 part 'generic_list_event.dart';
@@ -11,9 +11,9 @@ part 'generic_list_bloc.freezed.dart';
 class GenericListBloc<T>
     extends Bloc<GenericListEvent<T>, GenericListState<T>> {
   final _limit = constants.api.maxItemToBeFetchedAtOneTime;
-  final DataRepository<T> _repository;
+  final Repository<T> _repository;
   GenericListBloc({
-    required DataRepository<T> repository,
+    required Repository<T> repository,
   })  : _repository = repository,
         super(GenericListState<T>.initial()) {
     on<GenericListEvent<T>>((event, emit) async {
@@ -24,15 +24,15 @@ class GenericListBloc<T>
           result.fold(
             (left) => emit(GenericListState.failed(left)),
             (right) {
-              final hasMore = right.total > right.posts.length;
-              emit(GenericListState.loaded(right.posts, hasMore: hasMore));
+              final hasMore = right.total > right.items.length;
+              emit(GenericListState.loaded(right.items, hasMore: hasMore));
             },
           );
           break;
-        case _LoadMore(:final posts):
+        case _LoadMore(:final items):
           final lastState = state;
-          final skip = posts.length;
-          emit(GenericListState<T>.loadingMore(posts));
+          final skip = items.length;
+          emit(GenericListState<T>.loadingMore(items));
           final result = await _repository.list(limit: _limit, skip: skip);
           result.fold(
             (left) {
@@ -40,7 +40,7 @@ class GenericListBloc<T>
               emit(lastState);
             },
             (right) {
-              final newPosts = posts + right.posts;
+              final newPosts = items + right.items;
               final hasMore = right.total > newPosts.length;
               emit(GenericListState<T>.loaded(newPosts, hasMore: hasMore));
             },
