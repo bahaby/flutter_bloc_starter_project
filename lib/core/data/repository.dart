@@ -20,28 +20,26 @@ abstract interface class ModelBindings<T> {
 }
 
 abstract class Repository<T> {
-  final RemoteDataSource<T> _remoteDataSource;
-  final LocalDataSource<T> _localDataSource;
-  final InternetConnection _networkInfo;
+  final RemoteDataSource<T> remoteDataSource;
+  final LocalDataSource<T> localDataSource;
+  final InternetConnection networkInfo;
 
   Repository({
-    required networkInfo,
-    required RemoteDataSource<T> remoteDataSource,
-    required LocalDataSource<T> localDataSource,
-  })  : _remoteDataSource = remoteDataSource,
-        _localDataSource = localDataSource,
-        _networkInfo = networkInfo;
+    required this.networkInfo,
+    required this.remoteDataSource,
+    required this.localDataSource,
+  });
 
   Future<Either<AlertModel, PaginatedModel<T>>> list(
       {required int limit, required int skip}) async {
     return exceptionHandler(() async {
-      if (await _networkInfo.hasInternetAccess) {
-        final items = await _remoteDataSource.list(skip: skip, limit: limit);
-        await _localDataSource.saveAll(items.items);
+      if (await networkInfo.hasInternetAccess) {
+        final items = await remoteDataSource.list(skip: skip, limit: limit);
+        await localDataSource.saveAll(items.items);
         return right(items);
       } else {
         final cachedItems =
-            await _localDataSource.list(skip: skip, limit: limit);
+            await localDataSource.list(skip: skip, limit: limit);
         return right(cachedItems);
       }
     });
@@ -49,12 +47,12 @@ abstract class Repository<T> {
 
   Future<Either<AlertModel, T>> get(int id) async {
     return exceptionHandler(() async {
-      if (await _networkInfo.hasInternetAccess) {
-        final item = await _remoteDataSource.get(id);
-        await _localDataSource.save(item);
+      if (await networkInfo.hasInternetAccess) {
+        final item = await remoteDataSource.get(id);
+        await localDataSource.save(item);
         return right(item);
       } else {
-        final cachedItem = await _localDataSource.get(id);
+        final cachedItem = await localDataSource.get(id);
         return right(cachedItem);
       }
     });

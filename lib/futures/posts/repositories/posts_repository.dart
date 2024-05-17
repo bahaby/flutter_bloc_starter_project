@@ -1,8 +1,11 @@
 import 'package:flutter_bloc_starter_project/core/data/local_data_source.dart';
+import 'package:flutter_bloc_starter_project/futures/app/models/alert_model.dart';
+import 'package:flutter_bloc_starter_project/futures/posts/clients/posts_client.dart';
+import 'package:fpdart/fpdart.dart';
 import 'package:injectable/injectable.dart';
-import 'package:internet_connection_checker_plus/internet_connection_checker_plus.dart';
 import '../../../core/data/remote_data_source.dart';
 import '../../../core/data/repository.dart';
+import '../../../core/exception/exception_handler.dart';
 import '../models/post_model.dart';
 
 @LazySingleton(as: ModelBindings<PostModel>)
@@ -22,12 +25,24 @@ class PostModelBinding implements ModelBindings<PostModel> {
 
 @LazySingleton(as: Repository<PostModel>)
 class PostsRepository extends Repository<PostModel> {
+  final PostsClient client;
   PostsRepository({
-    required InternetConnection super.networkInfo,
+    required super.networkInfo,
+    required this.client,
   }) : super(
           localDataSource: LocalDataSource<PostModel>(),
-          remoteDataSource: RemoteDataSource<PostModel>(
-            basePath: 'posts',
+          remoteDataSource: RemoteDataSource(
+            getHandler: client.get,
+            listHandler: client.list,
           ),
         );
+
+  Future<Either<AlertModel, void>> specificMethod(PostModel post) async {
+    return exceptionHandler(() async {
+      // Example: Implement specific functionality if needed
+      // final data = await client.specificMethod(post);
+      // await localDataSource.save(post);
+      return right(null);
+    });
+  }
 }
