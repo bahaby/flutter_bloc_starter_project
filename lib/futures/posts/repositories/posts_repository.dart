@@ -6,6 +6,7 @@ import 'package:injectable/injectable.dart';
 import '../../../core/data/remote_data_source.dart';
 import '../../../core/data/repository.dart';
 import '../../../core/exception/exception_handler.dart';
+import '../../app/models/paginated_model.dart';
 import '../models/post_model.dart';
 
 @LazySingleton(as: ModelBindings<PostModel>)
@@ -37,12 +38,12 @@ class PostsRepository extends Repository<PostModel> {
           ),
         );
 
-  Future<Either<AlertModel, void>> specificMethod(PostModel post) async {
+  // Example: Implement specific functionality if needed
+  /* Future<Either<AlertModel, void>> specificMethod(PostModel post) async {
     return exceptionHandler(() async {
-      // Example: Implement specific functionality if needed
-      // final data = await client.specificMethod(post);
-      // await localDataSource.save(post);
+      final data = await client.specificMethod(post);
+      await localDataSource.save(post);
       return right(null);
     });
-  }
+  } */
 }

@@ -1,7 +1,8 @@
 {
   "explorer.fileNesting.patterns": {
-      "*.dart": "${capture}.g.dart,${capture}.config.dart,${capture}.freezed.dart,${capture}.gen.dart,${capture}.gr.dart,${capture}.gform.dart"
+    "*.dart": "${capture}.g.dart,${capture}.config.dart,${capture}.freezed.dart,${capture}.gen.dart,${capture}.gr.dart,${capture}.gform.dart"
   },
   "explorer.fileNesting.expand": false,
   "explorer.expandSingleFolderWorkspaces": false,
+  "dart.flutterSdkPath": ".fvm/versions/3.22.0"
 }

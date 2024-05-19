@@ -42,7 +42,6 @@ app.*.map.json
 /android/app/profile
 /android/app/release
 
-
 /ios/build/*
 android/app/release/
 
@@ -56,3 +55,6 @@ lib/core/generated
 
 # Hide environment files
 # .env.*
+
+# FVM Version Cache
+.fvm/
