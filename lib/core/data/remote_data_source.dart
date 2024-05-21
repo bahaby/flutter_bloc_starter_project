@@ -1,5 +1,5 @@
 import 'package:dio/dio.dart';
-import 'package:flutter_bloc_starter_project/core/data/repository.dart';
+import 'package:flutter_bloc_starter_project/core/data/data_repository.dart';
 import 'package:flutter_bloc_starter_project/core/exception/exception_handler.dart';
 import 'package:flutter_bloc_starter_project/core/modules/dependency_injection/di.dart';
 

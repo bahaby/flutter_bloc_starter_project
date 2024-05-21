@@ -2,7 +2,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:freezed_annotation/freezed_annotation.dart';
 
 import '../../../models/alert_model.dart';
-import '../../../../../core/data/repository.dart';
+import '../../../../../core/data/data_repository.dart';
 
 part 'generic_fetch_event.dart';
 part 'generic_fetch_state.dart';
@@ -10,9 +10,9 @@ part 'generic_fetch_bloc.freezed.dart';
 
 class GenericFetchBloc<T>
     extends Bloc<GenericFetchEvent<T>, GenericFetchState<T>> {
-  final Repository<T> _repository;
+  final DataRepository<T> _repository;
   GenericFetchBloc({
-    required Repository<T> repository,
+    required DataRepository<T> repository,
   })  : _repository = repository,
         super(const GenericFetchState.initial()) {
     on<GenericFetchEvent<T>>((event, emit) async {

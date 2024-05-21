@@ -7,24 +7,15 @@ import 'package:injectable/injectable.dart';
 import '../../../core/exception/exception_handler.dart';
 import '../../../core/modules/token_refresh/dio_token_refresh.dart';
 import '../../app/repositories/app_repository.dart';
-import '../data_sources/auth_remote_data_source.dart';
+import '../sources/auth_remote_data_source.dart';
 
-abstract interface class AuthRepository {
-  Future<Either<AlertModel, AuthModel>> login({
-    required String email,
-    required String password,
-  });
-
-  Future<Either<AlertModel, UserModel>> getUser();
-}
-
-@LazySingleton(as: AuthRepository)
-class AuthRepositoryImpl implements AuthRepository {
+@LazySingleton()
+class AuthRepository {
   final AuthRemoteDataSource _remoteDataSource;
   final DioTokenRefresh _dioTokenRefresh;
   final AppRepository _appRepository;
 
-  AuthRepositoryImpl({
+  AuthRepository({
     required AuthRemoteDataSource remoteDataSource,
     required DioTokenRefresh dioTokenRefresh,
     required AppRepository appRepository,

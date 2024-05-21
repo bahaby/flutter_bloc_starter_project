@@ -26,4 +26,12 @@ class PostsClient {
   Future<Response> get(int id) async {
     return await _client.get('$_basePath/$id');
   }
+
+  // Example: Implement specific functionality if needed
+  Future<Response> somethingElse() async {
+    return Future.value(Response(
+      requestOptions: RequestOptions(path: '$_basePath/somethingElse'),
+    ));
+    //return await _client.get('$_basePath/somethingElse');
+  }
 }

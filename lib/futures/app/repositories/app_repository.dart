@@ -15,7 +15,7 @@ import 'package:injectable/injectable.dart';
 import '../../../core/exception/exception_handler.dart';
 import '../../../core/modules/token_refresh/dio_token_refresh.dart';
 import '../models/alert_model.dart';
-import '../data_sources/app_remote_data_source.dart';
+import '../sources/app_remote_data_source.dart';
 
 enum GlobalState {
   loading,

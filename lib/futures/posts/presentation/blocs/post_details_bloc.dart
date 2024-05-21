@@ -1,11 +1,11 @@
 import '../../../app/presentation/blocs/generic_fetch_bloc/generic_fetch_bloc.dart';
 import 'package:injectable/injectable.dart';
 
-import '../../../../core/data/repository.dart';
+import '../../../../core/data/data_repository.dart';
 import '../../models/post_model.dart';
 
 @injectable
 class PostDetailsBloc extends GenericFetchBloc<PostModel> {
-  PostDetailsBloc(Repository<PostModel> repository)
+  PostDetailsBloc(DataRepository<PostModel> repository)
       : super(repository: repository);
 }

@@ -1,13 +1,10 @@
 import 'package:flutter_bloc_starter_project/core/data/local_data_source.dart';
-import 'package:flutter_bloc_starter_project/futures/app/models/alert_model.dart';
 import 'package:flutter_bloc_starter_project/futures/posts/clients/posts_client.dart';
-import 'package:fpdart/fpdart.dart';
+
 import 'package:injectable/injectable.dart';
-import '../../../core/data/remote_data_source.dart';
-import '../../../core/data/repository.dart';
-import '../../../core/exception/exception_handler.dart';
-import '../../app/models/paginated_model.dart';
+import '../../../core/data/data_repository.dart';
 import '../models/post_model.dart';
+import '../sources/posts_remote_data_source.dart';
 
 @LazySingleton(as: ModelBindings<PostModel>)
 class PostModelBinding implements ModelBindings<PostModel> {
@@ -24,26 +21,23 @@ class PostModelBinding implements ModelBindings<PostModel> {
   Map<String, Object?> toJson(PostModel obj) => obj.toJson();
 }
 
-@LazySingleton(as: Repository<PostModel>)
-class PostsRepository extends Repository<PostModel> {
+@LazySingleton(as: DataRepository<PostModel>)
+class PostsRepository extends DataRepository<PostModel> {
   final PostsClient client;
   PostsRepository({
     required super.networkInfo,
     required this.client,
   }) : super(
           localDataSource: LocalDataSource<PostModel>(),
-          remoteDataSource: RemoteDataSource(
+          remoteDataSource: PostsRemoteDataSource(
             getHandler: client.get,
             listHandler: client.list,
+            somethingElseHandler: client.somethingElse,
           ),
         );
 
-  // Example: Implement specific functionality if needed
-  /* Future<Either<AlertModel, void>> specificMethod(PostModel post) async {
-    return exceptionHandler(() async {
-      final data = await client.specificMethod(post);
-      await localDataSource.save(post);
-      return right(null);
-    });
-  } */
+  Future<void> somethingElse() async {
+    /* localDataSource.get(1);
+    await (remoteDataSource as PostsRemoteDataSource).somethingElse(); */
+  }
 }

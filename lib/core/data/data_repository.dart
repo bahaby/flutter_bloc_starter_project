@@ -19,12 +19,15 @@ abstract interface class ModelBindings<T> {
   int sortDesc(T a, T b);
 }
 
-abstract class Repository<T> {
+// Modify and use this generic data structure
+// if you have similar data repositories that have same methods
+// Example: posts_repository.dart
+abstract class DataRepository<T> {
   final RemoteDataSource<T> remoteDataSource;
   final LocalDataSource<T> localDataSource;
   final InternetConnection networkInfo;
 
-  Repository({
+  DataRepository({
     required this.networkInfo,
     required this.remoteDataSource,
     required this.localDataSource,
