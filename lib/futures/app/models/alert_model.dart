@@ -13,11 +13,11 @@ enum AlertType {
   error,
   notification,
   exception,
-  quiet
+  quiet,
 }
 
 @freezed
-class AlertModel with _$AlertModel {
+abstract class AlertModel with _$AlertModel {
   const factory AlertModel({
     required String message,
     required AlertType type,
@@ -33,11 +33,7 @@ class AlertModel with _$AlertModel {
       logIt.error(message);
     }
 
-    return AlertModel(
-      message: message,
-      type: type,
-      translatable: translatable,
-    );
+    return AlertModel(message: message, type: type, translatable: translatable);
   }
 
   factory AlertModel.exception({
@@ -73,9 +69,6 @@ class AlertModel with _$AlertModel {
       AlertModel.alert(message: '', type: AlertType.quiet);
 
   factory AlertModel.quiet() {
-    return const AlertModel(
-      message: '',
-      type: AlertType.quiet,
-    );
+    return const AlertModel(message: '', type: AlertType.quiet);
   }
 }

@@ -1,7 +1,7 @@
 import '../../../../futures/posts/models/post_model.dart';
 import 'package:hive/hive.dart';
 
-class PostAdaper extends TypeAdapter<PostModel> {
+class PostAdapter extends TypeAdapter<PostModel> {
   @override
   final int typeId = 0;
 
@@ -12,8 +12,9 @@ class PostAdaper extends TypeAdapter<PostModel> {
       body: reader.read(),
       title: reader.read(),
       userId: reader.read(),
-      reactions: reader.read(),
       tags: reader.read(),
+      reactions: ReactionsModel(likes: reader.read(), dislikes: reader.read()),
+      views: reader.read(),
     );
   }
 
@@ -23,7 +24,9 @@ class PostAdaper extends TypeAdapter<PostModel> {
     writer.write(obj.body);
     writer.write(obj.title);
     writer.write(obj.userId);
-    writer.write(obj.reactions);
     writer.write(obj.tags);
+    writer.write(obj.reactions.likes);
+    writer.write(obj.reactions.dislikes);
+    writer.write(obj.views);
   }
 }

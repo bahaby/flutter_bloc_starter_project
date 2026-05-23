@@ -6,7 +6,7 @@ part 'app_text_theme.freezed.dart';
 typedef MaterialTextTheme = TextTheme;
 
 @freezed
-class AppTextTheme with _$AppTextTheme {
+abstract class AppTextTheme with _$AppTextTheme {
   factory AppTextTheme({
     required TextStyle displayLarge,
     required TextStyle displayMedium,
@@ -28,20 +28,20 @@ class AppTextTheme with _$AppTextTheme {
   const AppTextTheme._();
 
   MaterialTextTheme get materialTextTheme => MaterialTextTheme(
-        displayLarge: displayLarge,
-        displayMedium: displayMedium,
-        displaySmall: displaySmall,
-        headlineLarge: headlineLarge,
-        headlineMedium: headlineMedium,
-        headlineSmall: headlineSmall,
-        titleLarge: titleLarge,
-        titleMedium: titleMedium,
-        titleSmall: titleSmall,
-        bodyLarge: bodyLarge,
-        bodyMedium: bodyMedium,
-        bodySmall: bodySmall,
-        labelLarge: labelLarge,
-        labelMedium: labelMedium,
-        labelSmall: labelSmall,
-      );
+    displayLarge: displayLarge,
+    displayMedium: displayMedium,
+    displaySmall: displaySmall,
+    headlineLarge: headlineLarge,
+    headlineMedium: headlineMedium,
+    headlineSmall: headlineSmall,
+    titleLarge: titleLarge,
+    titleMedium: titleMedium,
+    titleSmall: titleSmall,
+    bodyLarge: bodyLarge,
+    bodyMedium: bodyMedium,
+    bodySmall: bodySmall,
+    labelLarge: labelLarge,
+    labelMedium: labelMedium,
+    labelSmall: labelSmall,
+  );
 }

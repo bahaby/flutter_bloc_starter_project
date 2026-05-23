@@ -3,8 +3,9 @@ import 'dart:async';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:flutter_bloc_starter_project/futures/app/models/auth_model.dart';
+import 'package:flutter_bloc_starter_project/futures/auth/repositories/auth_repository.dart';
 import '../../../../core/generated/translations.g.dart';
-import '../../models/user_model.dart';
 import '../../models/alert_model.dart';
 import 'package:freezed_annotation/freezed_annotation.dart';
 import 'package:hydrated_bloc/hydrated_bloc.dart';
@@ -26,13 +27,9 @@ class AppBloc extends HydratedBloc<AppEvent, AppState>
   final InternetConnection _networkInfo;
   StreamSubscription<InternetStatus>? _networkInfoSubscription;
   late StreamSubscription<GlobalState> _globalStateSubscription;
-  late StreamSubscription<UserModel?> _userSubscription;
-  AppBloc({
-    required AppRepository appRepository,
-    required InternetConnection networkInfo,
-  })  : _appRepository = appRepository,
-        _networkInfo = networkInfo,
-        super(AppState.initial()) {
+  late StreamSubscription<AuthModel?> _userSubscription;
+  AppBloc({required this._appRepository, required this._networkInfo})
+    : super(AppState.initial()) {
     WidgetsBinding.instance.addObserver(this);
     _globalStateSubscription = _appRepository.globalState.listen((event) {
       add(AppEvent.globalStateChanged(event));
@@ -49,23 +46,22 @@ class AppBloc extends HydratedBloc<AppEvent, AppState>
     on<AppEvent>((event, emit) async {
       switch (event) {
         case _Started():
+          _appRepository.initializeAuthStatus();
           final locale = _appRepository.locale;
           _changeLocale(locale, emit);
-          emit(state.copyWith(
-            isFirstLaunch: _appRepository.isFirstLaunch,
-            isFirstLogin: _appRepository.isFirstLogin,
-            onboardingCompleted: _appRepository.onboardingCompleted,
-          ));
-          await _appRepository.initializeLoggedUser();
-          await _appRepository.initializeTranslationOverrides();
+          emit(
+            state.copyWith(
+              isFirstLaunch: _appRepository.isFirstLaunch,
+              isFirstLogin: _appRepository.isFirstLogin,
+              onboardingCompleted: _appRepository.onboardingCompleted,
+            ),
+          );
+          //await _appRepository.initializeTranslationOverrides();
 
           break;
         case _UserLogout():
           final result = await _appRepository.logout();
-          result.fold(
-            (left) => emit(state.copyWith(alert: left)),
-            (_) {},
-          );
+          result.fold((left) => emit(state.copyWith(alert: left)), (_) {});
           break;
         case _ChangeLocale(locale: AppLocale locale):
           _appRepository.setLocale(locale: locale);
@@ -95,7 +91,7 @@ class AppBloc extends HydratedBloc<AppEvent, AppState>
         case _GlobalStateChanged(state: GlobalState globalState):
           emit(state.copyWith(globalState: globalState));
           break;
-        case _LoggedUserChanged(user: UserModel? user):
+        case _LoggedUserChanged(user: AuthModel? user):
           emit(state.copyWith(currentUser: user));
           break;
         case _AuthStatusChanged(status: AuthStatus status):
@@ -117,9 +113,7 @@ class AppBloc extends HydratedBloc<AppEvent, AppState>
 
   @override
   Map<String, dynamic>? toJson(AppState state) {
-    return {
-      'theme': state.theme.toJson(),
-    };
+    return {'theme': state.theme.toJson()};
   }
 
   @override
@@ -134,8 +128,9 @@ class AppBloc extends HydratedBloc<AppEvent, AppState>
     switch (state) {
       case AppLifecycleState.resumed:
         _networkInfoSubscription = _networkInfo.onStatusChange.listen((event) {
-          add(AppEvent.internetStatusChanged(
-              event == InternetStatus.connected));
+          add(
+            AppEvent.internetStatusChanged(event == InternetStatus.connected),
+          );
         });
         break;
       case AppLifecycleState.inactive:
@@ -179,16 +174,20 @@ class AppBloc extends HydratedBloc<AppEvent, AppState>
     _updateSystemOverlay();
   }
 
-  _updateSystemOverlay() {
+  void _updateSystemOverlay() {
     final systemModeIsDark =
         PlatformDispatcher.instance.platformBrightness == Brightness.dark;
     final isDark = state.theme.mode == ThemeMode.system
         ? systemModeIsDark
         : state.theme.mode == ThemeMode.dark;
-    final colorScheme =
-        isDark ? state.theme.dark.colorScheme : state.theme.light.colorScheme;
+    final colorScheme = isDark
+        ? state.theme.dark.colorScheme
+        : state.theme.light.colorScheme;
     final primaryColor = ElevationOverlay.colorWithOverlay(
-        colorScheme.surface, colorScheme.primary, 3);
+      colorScheme.surface,
+      colorScheme.primary,
+      3,
+    );
 
     SystemChrome.setSystemUIOverlayStyle(
       createOverlayStyle(

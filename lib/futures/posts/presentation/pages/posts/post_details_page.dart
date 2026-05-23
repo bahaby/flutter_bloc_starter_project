@@ -12,10 +12,7 @@ import '../../blocs/post_details_bloc.dart';
 @RoutePage()
 class PostDetailsPage extends StatefulWidget {
   final int postId;
-  const PostDetailsPage({
-    super.key,
-    required this.postId,
-  });
+  const PostDetailsPage({super.key, required this.postId});
 
   @override
   State<PostDetailsPage> createState() => _PostDetailsPageState();
@@ -24,9 +21,9 @@ class PostDetailsPage extends StatefulWidget {
 class _PostDetailsPageState extends State<PostDetailsPage> {
   @override
   void initState() {
-    context
-        .read<PostDetailsBloc>()
-        .add(GenericFetchEvent.refresh(widget.postId));
+    context.read<PostDetailsBloc>().add(
+      GenericFetchEvent.refresh(widget.postId),
+    );
     super.initState();
   }
 
@@ -37,10 +34,7 @@ class _PostDetailsPageState extends State<PostDetailsPage> {
         switch (state) {
           case Failed(:final alert):
             context.router.maybePop();
-            SnackBarHelper.showAlert(
-              context,
-              alert: alert,
-            );
+            SnackBarHelper.showAlert(context, alert: alert);
             break;
         }
       },
@@ -74,7 +68,7 @@ class _PostDetailsPageState extends State<PostDetailsPage> {
                       ),
                       const SizedBox(height: 16.0),
                       Text(
-                        '${context.tr.posts.reactions}: ${item.reactions}',
+                        '${context.tr.posts.reactions}: ${item.reactions.likes}',
                         style: Theme.of(context).textTheme.titleMedium,
                       ),
                     ],
@@ -93,9 +87,9 @@ class _PostDetailsPageState extends State<PostDetailsPage> {
                   const SizedBox(height: 16.0),
                   ElevatedButton(
                     onPressed: () {
-                      context
-                          .read<PostDetailsBloc>()
-                          .add(GenericFetchEvent.refresh(widget.postId));
+                      context.read<PostDetailsBloc>().add(
+                        GenericFetchEvent.refresh(widget.postId),
+                      );
                     },
                     child: Text(context.tr.core.actions.retry),
                   ),

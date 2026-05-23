@@ -1,17 +1,16 @@
 import 'dart:async';
 
-import '../../../core/utils/helpers/jwt_helper.dart';
+import 'package:flutter_bloc_starter_project/futures/app/models/auth_model.dart';
+import 'package:flutter_bloc_starter_project/futures/app/presentation/blocs/app_bloc.dart';
+import 'package:flutter_bloc_starter_project/futures/auth/repositories/auth_repository.dart';
 
 import '../../../core/generated/translations.g.dart';
 import '../../../core/modules/hive_storage/hive_storage.dart';
 import '../../../core/modules/storage/app_preferences.dart';
-import '../models/user_model.dart';
-import '../presentation/blocs/app_bloc.dart';
 import 'package:fpdart/fpdart.dart';
 import 'package:injectable/injectable.dart';
 
 import '../../../core/exception/exception_handler.dart';
-import '../../../core/modules/token_refresh/dio_token_refresh.dart';
 import '../models/alert_model.dart';
 import '../data_sources/app_remote_data_source.dart';
 
@@ -31,16 +30,15 @@ enum GlobalState {
 abstract interface class AppRepository {
   Future<Either<AlertModel, void>> logout();
   void setGlobalState({required GlobalState state});
-  void setLoggedUser({required UserModel? user});
   void setLocale({required AppLocale locale});
   void setFirstLaunch();
   void setFirstLogin();
   void setOnboardingCompleted();
+  void initializeAuthStatus();
 
-  Future<Either<AlertModel, void>> initializeLoggedUser();
   Future<Either<AlertModel, void>> initializeTranslationOverrides();
   Stream<GlobalState> get globalState;
-  Stream<UserModel?> get loggedUser;
+  Stream<AuthModel?> get loggedUser;
   Stream<AuthStatus> get authStatus;
   AppLocale get locale;
   bool get isFirstLaunch;
@@ -51,32 +49,21 @@ abstract interface class AppRepository {
 @LazySingleton(as: AppRepository)
 class AppRepositoryImpl implements AppRepository {
   final AppRemoteDataSource _appRemoteDataSource;
-  final DioTokenRefresh _dioTokenRefresh;
-  final HiveStorage _hiveStorage;
   final AppPreferences _appPreferences;
+  final AuthRepository _authRepository;
+  final HiveStorage _hiveStorage;
 
   AppRepositoryImpl({
-    required AppRemoteDataSource appRemoteDataSource,
-    required DioTokenRefresh dioTokenRefresh,
-    required HiveStorage hiveStorage,
-    required AppPreferences appPreferences,
-  })  : _appRemoteDataSource = appRemoteDataSource,
-        _hiveStorage = hiveStorage,
-        _appPreferences = appPreferences,
-        _dioTokenRefresh = dioTokenRefresh;
+    required this._appRemoteDataSource,
+    required this._appPreferences,
+    required this._authRepository,
+    required this._hiveStorage,
+  });
 
   final _globalStateController = StreamController<GlobalState>.broadcast();
-  final _loggedUserController = StreamController<UserModel?>.broadcast();
-  final _authStatusController = StreamController<AuthStatus>.broadcast();
 
   @override
   Stream<GlobalState> get globalState => _globalStateController.stream;
-
-  @override
-  Stream<UserModel?> get loggedUser => _loggedUserController.stream;
-
-  @override
-  Stream<AuthStatus> get authStatus => _authStatusController.stream;
 
   @override
   bool get isFirstLaunch => _appPreferences.isFirstLaunchApp;
@@ -91,16 +78,6 @@ class AppRepositoryImpl implements AppRepository {
   AppLocale get locale {
     final languageCode = _appPreferences.languageCode;
     return AppLocaleUtils.parseLocaleParts(languageCode: languageCode);
-  }
-
-  @override
-  Future<Either<AlertModel, void>> logout() async {
-    return exceptionHandler(() async {
-      var result = await _appRemoteDataSource.logout();
-      setLoggedUser(user: null);
-      await _clearUserData();
-      return right(result);
-    });
   }
 
   @override
@@ -119,15 +96,16 @@ class AppRepositoryImpl implements AppRepository {
   }
 
   @override
-  void setGlobalState({required GlobalState state}) {
-    _globalStateController.add(state);
+  Stream<AuthModel?> get loggedUser {
+    return _authRepository.loggedUser;
   }
 
   @override
-  void setLoggedUser({required UserModel? user}) {
-    _loggedUserController.add(user);
-    _authStatusController.add(
-        user != null ? AuthStatus.authenticated : AuthStatus.unauthenticated);
+  Stream<AuthStatus> get authStatus => _authRepository.authStatus;
+
+  @override
+  void setGlobalState({required GlobalState state}) {
+    _globalStateController.add(state);
   }
 
   @override
@@ -151,23 +129,13 @@ class AppRepositoryImpl implements AppRepository {
   }
 
   @override
-  Future<Either<AlertModel, void>> initializeLoggedUser() async {
-    final authModel = await _dioTokenRefresh.fresh.token;
-    final user = authModel?.user;
-    final refreshToken = authModel?.refreshToken;
-
-    if (user == null || JwtHelper.isTokenExpiring(refreshToken)) {
-      await _clearUserData();
-      setLoggedUser(user: null);
-    } else {
-      setLoggedUser(user: user);
-    }
-
-    return right(null);
+  void initializeAuthStatus() {
+    _authRepository.initializeAuthStatus();
   }
 
-  Future<void> _clearUserData() async {
-    await _dioTokenRefresh.fresh.clearToken();
-    await _hiveStorage.clearAll();
+  @override
+  Future<Either<AlertModel, void>> logout() async {
+    _hiveStorage.clearAll();
+    return _authRepository.logout();
   }
 }

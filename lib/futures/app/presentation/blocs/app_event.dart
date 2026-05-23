@@ -1,7 +1,7 @@
 part of 'app_bloc.dart';
 
 @freezed
-class AppEvent with _$AppEvent {
+abstract class AppEvent with _$AppEvent {
   const factory AppEvent.started() = _Started;
   const factory AppEvent.changeThemeMode(ThemeMode mode) = _ChangeThemeMode;
   const factory AppEvent.changeThemeColor(Color color) = _ChangeThemeColor;
@@ -20,7 +20,7 @@ class AppEvent with _$AppEvent {
       _GlobalStateChanged;
 
   /// this should be a private event only accessable by the app bloc
-  const factory AppEvent.loggedUserChanged(UserModel? user) =
+  const factory AppEvent.loggedUserChanged(AuthModel? user) =
       _LoggedUserChanged;
 
   /// this should be a private event only accessable by the app bloc

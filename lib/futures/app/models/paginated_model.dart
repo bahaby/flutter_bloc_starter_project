@@ -4,14 +4,14 @@ part 'paginated_model.freezed.dart';
 part 'paginated_model.g.dart';
 
 @freezed
-@JsonSerializable(genericArgumentFactories: true)
-class PaginatedModel<T> with _$PaginatedModel<T> {
+abstract class PaginatedModel<T> with _$PaginatedModel<T> {
+  @JsonSerializable(genericArgumentFactories: true)
   const factory PaginatedModel({
-    required int limit,
-    required int skip,
-    required int total,
-    required List<T> posts,
-  }) = _PaginatedModel;
+    @Default(100) int limit,
+    @Default(0) int skip,
+    @Default(100) int total,
+    @Default([]) List<T> posts,
+  }) = _PaginatedModel<T>;
 
   factory PaginatedModel.fromJson(
     Map<String, dynamic> json,
@@ -19,7 +19,4 @@ class PaginatedModel<T> with _$PaginatedModel<T> {
   ) {
     return _$PaginatedModelFromJson<T>(json, fromJsonT);
   }
-
-  factory PaginatedModel.initial() =>
-      PaginatedModel<T>(skip: 0, limit: 100, total: 100, posts: <T>[]);
 }

@@ -9,7 +9,7 @@ part 'env_model.g.dart';
 
 @freezed
 @singleton
-class EnvModel with _$EnvModel {
+abstract class EnvModel with _$EnvModel {
   @JsonSerializable(fieldRename: FieldRename.screamingSnake)
   factory EnvModel({
     required String env,

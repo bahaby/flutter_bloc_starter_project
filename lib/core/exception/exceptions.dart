@@ -7,17 +7,12 @@ mixin TranslatableException {
 abstract class AppException with TranslatableException implements Exception {
   final dynamic payload;
 
-  AppException({
-    this.payload,
-  });
+  AppException({this.payload});
 }
 
 ///for new AppExceptions you also need to create a new type Enum. Check [CacheExceptionType].
 class CacheException extends AppException {
-  CacheException({
-    required this.type,
-    super.payload,
-  });
+  CacheException({required this.type, super.payload});
 
   final CacheExceptionType type;
 
@@ -26,10 +21,7 @@ class CacheException extends AppException {
 }
 
 class JsonSerializationException extends AppException {
-  JsonSerializationException({
-    required this.type,
-    super.payload,
-  });
+  JsonSerializationException({required this.type, super.payload});
   final JsonSerializationExceptionType type;
 
   @override

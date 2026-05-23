@@ -33,10 +33,7 @@ class _LoginPageState extends State<LoginPage> {
         listener: (context, state) {
           switch (state) {
             case Failed(:final alert):
-              SnackBarHelper.showAlert(
-                context,
-                alert: alert,
-              );
+              SnackBarHelper.showAlert(context, alert: alert);
               break;
           }
         },
@@ -45,69 +42,73 @@ class _LoginPageState extends State<LoginPage> {
             padding: EdgeInsets.symmetric(horizontal: Dimens.d20.responsive()),
             child: SingleChildScrollView(
               child: LoginFormFormBuilder(
-                  model: _formModel,
-                  builder: (context, formModel, child) {
-                    return Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      mainAxisSize: MainAxisSize.min,
-                      children: [
-                        SizedBox(height: Dimens.d20.responsive()),
-                        Text(
-                          context.tr.auth.loginButton,
-                          style: context.textThemeScheme.headlineSmall,
-                        ),
-                        SizedBox(height: Dimens.d30.responsive()),
-                        CustomTextField(
-                          formControl: formModel.usernameControl,
-                          keyboardType: TextInputType.text,
-                          textInputAction: TextInputAction.next,
-                          labelText: context.tr.core.form.username.label,
-                          hintText: context.tr.core.form.username.hint,
-                          minLength: 3,
-                          isRequired: true,
-                        ),
-                        SizedBox(height: Dimens.d10.responsive()),
-                        CustomTextField(
-                          formControl: formModel.passwordControl,
-                          keyboardType: TextInputType.text,
-                          textInputAction: TextInputAction.send,
-                          labelText: context.tr.core.form.password.label,
-                          hintText: context.tr.core.form.password.hint,
-                          minLength: 6,
-                          isRequired: true,
-                        ),
-                        Row(
-                          children: [
-                            ElevatedButton(
-                              onPressed: () {
-                                formModel.form.markAllAsTouched();
-                                if (formModel.form.valid) {
-                                  context.read<AuthBloc>().add(AuthEvent.login(
-                                      email: formModel.model.username,
-                                      password: formModel.model.password));
-                                }
-                              },
-                              child: Text(context.tr.auth.loginButton),
+                model: _formModel,
+                builder: (context, formModel, child) {
+                  return Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    mainAxisSize: MainAxisSize.min,
+                    children: [
+                      SizedBox(height: Dimens.d20.responsive()),
+                      Text(
+                        context.tr.auth.loginButton,
+                        style: context.textThemeScheme.headlineSmall,
+                      ),
+                      SizedBox(height: Dimens.d30.responsive()),
+                      CustomTextField(
+                        formControl: formModel.usernameControl,
+                        keyboardType: TextInputType.text,
+                        textInputAction: TextInputAction.next,
+                        labelText: context.tr.core.form.username.label,
+                        hintText: context.tr.core.form.username.hint,
+                        minLength: 3,
+                        isRequired: true,
+                      ),
+                      SizedBox(height: Dimens.d10.responsive()),
+                      CustomTextField(
+                        formControl: formModel.passwordControl,
+                        keyboardType: TextInputType.text,
+                        textInputAction: TextInputAction.send,
+                        labelText: context.tr.core.form.password.label,
+                        hintText: context.tr.core.form.password.hint,
+                        minLength: 6,
+                        isRequired: true,
+                      ),
+                      Row(
+                        children: [
+                          ElevatedButton(
+                            onPressed: () {
+                              formModel.form.markAllAsTouched();
+                              if (formModel.form.valid) {
+                                context.read<AuthBloc>().add(
+                                  AuthEvent.login(
+                                    email: formModel.model.username,
+                                    password: formModel.model.password,
+                                  ),
+                                );
+                              }
+                            },
+                            child: Text(context.tr.auth.loginButton),
+                          ),
+                          const Spacer(),
+                          TextButton(
+                            onPressed: () {
+                              formModel.usernameControl.value = 'emilys';
+                              formModel.passwordControl.value = 'emilyspass';
+                            },
+                            style: TextButton.styleFrom(
+                              textStyle: context.textThemeScheme.labelSmall,
                             ),
-                            const Spacer(),
-                            TextButton(
-                              onPressed: () {
-                                formModel.usernameControl.value = 'kminchelle';
-                                formModel.passwordControl.value = '0lelplR';
-                              },
-                              style: TextButton.styleFrom(
-                                textStyle: context.textThemeScheme.labelSmall,
-                              ),
-                              child: const Text("Put demo user inputs"),
-                            ),
-                          ],
-                        ),
-                        SizedBox(height: Dimens.d24.responsive()),
-                        SizedBox(height: Dimens.d8.responsive()),
-                        SizedBox(height: Dimens.d40.responsive()),
-                      ],
-                    );
-                  }),
+                            child: const Text("Put demo user inputs"),
+                          ),
+                        ],
+                      ),
+                      SizedBox(height: Dimens.d24.responsive()),
+                      SizedBox(height: Dimens.d8.responsive()),
+                      SizedBox(height: Dimens.d40.responsive()),
+                    ],
+                  );
+                },
+              ),
             ),
           );
         },

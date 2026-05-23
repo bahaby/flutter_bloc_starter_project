@@ -1,15 +1,9 @@
 part of 'app_bloc.dart';
 
-enum AuthStatus {
-  initial,
-  authenticated,
-  unauthenticated;
-}
-
 @freezed
-class AppState with _$AppState {
+abstract class AppState with _$AppState {
   const factory AppState({
-    UserModel? currentUser,
+    AuthModel? currentUser,
     required bool isFirstLaunch,
     required bool isFirstLogin,
     required bool onboardingCompleted,
@@ -22,13 +16,13 @@ class AppState with _$AppState {
   }) = _AppState;
 
   factory AppState.initial() => _AppState(
-        isFirstLaunch: true,
-        isFirstLogin: true,
-        onboardingCompleted: false,
-        authStatus: AuthStatus.initial,
-        theme: di<ThemeModel>(),
-        globalState: GlobalState.loaded,
-        isInternetConnected: true,
-        locale: AppLocale.en,
-      );
+    isFirstLaunch: true,
+    isFirstLogin: true,
+    onboardingCompleted: false,
+    authStatus: AuthStatus.initial,
+    theme: di<ThemeModel>(),
+    globalState: GlobalState.loaded,
+    isInternetConnected: true,
+    locale: AppLocale.en,
+  );
 }

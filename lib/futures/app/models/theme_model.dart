@@ -9,7 +9,7 @@ part 'theme_model.freezed.dart';
 
 @freezed
 @singleton
-class ThemeModel with _$ThemeModel {
+abstract class ThemeModel with _$ThemeModel {
   factory ThemeModel({
     required ThemeMode mode,
     required ThemeData light,
@@ -17,10 +17,10 @@ class ThemeModel with _$ThemeModel {
   }) = _ThemeModel;
 
   factory ThemeModel.initial() => ThemeModel(
-        mode: ThemeMode.system,
-        light: ThemeData.light(),
-        dark: ThemeData.dark(),
-      );
+    mode: ThemeMode.system,
+    light: ThemeData.light(),
+    dark: ThemeData.dark(),
+  );
 
   ThemeModel._();
 
@@ -32,8 +32,8 @@ class ThemeModel with _$ThemeModel {
 
       return ThemeModel(
         mode: ThemeMode.values.elementAt(mode),
-        light: ThemeDecoder.decodeThemeData(light, validate: false)!,
-        dark: ThemeDecoder.decodeThemeData(dark, validate: false)!,
+        light: ThemeDecoder.instance.decodeThemeData(light, validate: false)!,
+        dark: ThemeDecoder.instance.decodeThemeData(dark, validate: false)!,
       );
     } catch (e) {
       return ThemeModel.initial();
@@ -43,8 +43,8 @@ class ThemeModel with _$ThemeModel {
   Map<String, dynamic> toJson() {
     return {
       'mode': mode.index,
-      'light': ThemeEncoder.encodeThemeData(light),
-      'dark': ThemeEncoder.encodeThemeData(dark),
+      'light': ThemeEncoder.instance.encodeThemeData(light),
+      'dark': ThemeEncoder.instance.encodeThemeData(dark),
     };
   }
 

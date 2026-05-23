@@ -30,22 +30,21 @@ Future<void> main() async {
 
       // Configures dependency injection to init modules and singletons.
 
-      configureDependencyInjection();
+      await configureDependencyInjection();
+      await di.allReady();
 
       if (Platform.isAndroid || Platform.isIOS) {
         // Sets up allowed device orientations and other settings for the app.
-        await SystemChrome.setPreferredOrientations(
-          [DeviceOrientation.portraitUp, DeviceOrientation.portraitDown],
-        );
+        await SystemChrome.setPreferredOrientations([
+          DeviceOrientation.portraitUp,
+          DeviceOrientation.portraitDown,
+        ]);
       }
 
       // Sets system overylay style.
       await SystemChrome.setEnabledSystemUIMode(
         SystemUiMode.manual,
-        overlays: [
-          SystemUiOverlay.top,
-          SystemUiOverlay.bottom,
-        ],
+        overlays: [SystemUiOverlay.top, SystemUiOverlay.bottom],
       );
 
       // Inits sentry for error tracking.
@@ -55,8 +54,8 @@ Future<void> main() async {
       Bloc.observer = CustomBlocObserver();
       HydratedBloc.storage = await HydratedStorage.build(
         storageDirectory: kIsWeb
-            ? HydratedStorage.webStorageDirectory
-            : await getApplicationDocumentsDirectory(),
+            ? HydratedStorageDirectory.web
+            : HydratedStorageDirectory((await getTemporaryDirectory()).path),
       );
 
       return runApp(
@@ -64,20 +63,20 @@ Future<void> main() async {
         DefaultAssetBundle(
           bundle: SentryAssetBundle(),
           child: ScreenUtilInit(
-              designSize: Size(constants.device.designDeviceWidth,
-                  constants.device.designDeviceHeight),
-              builder: (context, child) {
-                AppDimen.of(context);
-                return TranslationProvider(child: const App());
-              }),
+            designSize: Size(
+              constants.device.designDeviceWidth,
+              constants.device.designDeviceHeight,
+            ),
+            builder: (context, child) {
+              AppDimen.of(context);
+              return TranslationProvider(child: const App());
+            },
+          ),
         ),
       );
     },
     (exception, stackTrace) async {
-      await Sentry.captureException(
-        exception,
-        stackTrace: stackTrace,
-      );
+      await Sentry.captureException(exception, stackTrace: stackTrace);
     },
   );
 }

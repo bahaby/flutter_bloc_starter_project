@@ -1,12 +1,11 @@
-import '../../../futures/app/models/auth_model.dart';
-import 'di.config.dart';
-import 'package:fresh_dio/fresh_dio.dart';
 import 'package:get_it/get_it.dart';
 import 'package:injectable/injectable.dart';
+import 'di.config.dart';
 
 final di = GetIt.instance;
-
 @InjectableInit(
-  ignoreUnregisteredTypes: [TokenStorage<AuthModel>],
+  initializerName: 'init',
+  preferRelativeImports: true,
+  asExtension: false,
 )
-void configureDependencyInjection() => di.init();
+Future<void> configureDependencyInjection() async => await init(di);

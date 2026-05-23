@@ -7,7 +7,7 @@ import 'app_text_theme.dart';
 part 'app_typography.freezed.dart';
 
 @freezed
-class AppTypography with _$AppTypography {
+abstract class AppTypography with _$AppTypography {
   factory AppTypography({
     required AppTextTheme black,
     required AppTextTheme white,
@@ -16,15 +16,15 @@ class AppTypography with _$AppTypography {
   const AppTypography._();
 
   factory AppTypography.create({required String fontFamily}) => AppTypography(
-        black: _createTextTheme(fontFamily, constants.palette.black),
-        white: _createTextTheme(fontFamily, constants.palette.white),
-      );
+    black: _createTextTheme(fontFamily, constants.palette.black),
+    white: _createTextTheme(fontFamily, constants.palette.white),
+  );
 
   Typography get materialTypography => Typography.material2021(
-        platform: null,
-        black: black.materialTextTheme,
-        white: white.materialTextTheme,
-      );
+    platform: null,
+    black: black.materialTextTheme,
+    white: white.materialTextTheme,
+  );
 
   static AppTextTheme _createTextTheme(String fontFamily, Color color) =>
       AppTextTheme(

@@ -6,28 +6,33 @@ import 'router.gr.dart';
 
 @AutoRouterConfig(replaceInRouteName: 'Page,Route')
 @singleton
-class AppRouter extends $AppRouter {
+class AppRouter extends RootStackRouter {
   @override
   RouteType get defaultRouteType => const RouteType.cupertino();
 
   @override
   List<AutoRoute> get routes => [
+    AutoRoute(
+      page: AppWrapper.page,
+      initial: true,
+      children: [
         AutoRoute(
-          page: AppWrapper.page,
-          initial: true,
+          page: AuthWrapper.page,
+          children: [AutoRoute(page: LoginRoute.page, initial: true)],
+        ),
+        AutoRoute(
+          page: PostsWrapper.page,
           children: [
-            AutoRoute(page: AuthWrapper.page, children: [
-              AutoRoute(page: LoginRoute.page, initial: true),
-            ]),
-            AutoRoute(page: PostsWrapper.page, children: [
-              AutoRoute(page: PostsRoute.page, initial: true),
-              CustomRoute(
-                  page: PostDetailsRoute.page,
-                  transitionsBuilder: TransitionsBuilders.fadeIn,
-                  durationInMilliseconds:
-                      constants.times.pageTransition.inMilliseconds),
-            ]),
+            AutoRoute(page: PostsRoute.page, initial: true),
+            CustomRoute(
+              page: PostDetailsRoute.page,
+              transitionsBuilder: TransitionsBuilders.fadeIn,
+              durationInMilliseconds:
+                  constants.times.pageTransition.inMilliseconds,
+            ),
           ],
         ),
-      ];
+      ],
+    ),
+  ];
 }

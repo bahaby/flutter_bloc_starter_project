@@ -27,7 +27,7 @@ Future<ThemeData> createTheme({
 
   final primaryColor = ElevationOverlay.colorWithOverlay(
       appColorScheme.surface, appColorScheme.primary, 3);
-  final customOnPrimaryColor = appColorScheme.primary.withOpacity(0.5);
+  final customOnPrimaryColor = appColorScheme.primary.withValues(alpha: 0.5);
 
   return ThemeData(
     textTheme: textTheme.materialTextTheme,
@@ -53,7 +53,7 @@ Future<ThemeData> createTheme({
     iconTheme: IconThemeData(
       color: appColorScheme.primary,
     ),
-    cardTheme: CardTheme(
+    cardTheme: CardThemeData(
       elevation: constants.theme.defaultElevation,
       color: primaryColor,
       shape: RoundedRectangleBorder(
@@ -95,7 +95,7 @@ Future<ThemeData> createTheme({
         borderRadius: BorderRadius.all(
             Radius.circular(constants.theme.defaultBorderRadius)),
         borderSide: BorderSide(
-          color: constants.palette.red.withOpacity(0.3),
+          color: constants.palette.red.withValues(alpha: 0.3),
           width: 4,
         ),
       ),
@@ -103,7 +103,7 @@ Future<ThemeData> createTheme({
         borderRadius: BorderRadius.all(
             Radius.circular(constants.theme.defaultBorderRadius)),
         borderSide: BorderSide(
-          color: constants.palette.red.withOpacity(0.3),
+          color: constants.palette.red.withValues(alpha: 0.3),
           width: 4,
         ),
       ),
@@ -111,7 +111,7 @@ Future<ThemeData> createTheme({
         borderRadius: BorderRadius.all(
             Radius.circular(constants.theme.defaultBorderRadius)),
         borderSide: BorderSide(
-          color: constants.palette.green.withOpacity(0.5),
+          color: constants.palette.green.withValues(alpha: 0.5),
           width: 4,
         ),
       ),
@@ -147,7 +147,7 @@ Future<ThemeData> createTheme({
           return null;
         }
         if (states.contains(WidgetState.selected)) {
-          return customOnPrimaryColor.withOpacity(0.7);
+          return customOnPrimaryColor.withValues(alpha: 0.7);
         }
         return null;
       }),

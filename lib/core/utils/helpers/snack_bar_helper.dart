@@ -20,6 +20,12 @@ class SnackBarHelper {
     ScaffoldMessenger.of(context).showSnackBar(snackbar);
   }
 
+  static void showMessage(BuildContext context, String message) {
+    var snackbar = _createSnackbar(context, message, AlertType.notification);
+    ScaffoldMessenger.of(context).hideCurrentSnackBar();
+    ScaffoldMessenger.of(context).showSnackBar(snackbar);
+  }
+
   static SnackBar _createSnackbar(
     BuildContext context,
     String message,
@@ -59,10 +65,13 @@ class SnackBarHelper {
             child: Icon(icon, color: Colors.white),
           ),
           Expanded(
-            child: Text(message,
-                softWrap: true,
-                style: context.textThemeScheme.bodyMedium
-                    ?.copyWith(color: Colors.white)),
+            child: Text(
+              message,
+              softWrap: true,
+              style: context.textThemeScheme.bodyMedium?.copyWith(
+                color: Colors.white,
+              ),
+            ),
           ),
         ],
       ),

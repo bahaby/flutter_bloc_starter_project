@@ -1,12 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:flutter_bloc_starter_project/core/modules/dependency_injection/di.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
 import '../../../../core/generated/translations.g.dart';
 import '../blocs/app_bloc.dart';
 import '../../../../core/modules/observers/custom_route_observer.dart';
 import 'package:sentry_flutter/sentry_flutter.dart';
-
-import '../../../../core/modules/dependency_injection/di.dart';
 import '../../../../core/utils/constants.dart';
 import '../../../../core/utils/methods/aliases.dart';
 

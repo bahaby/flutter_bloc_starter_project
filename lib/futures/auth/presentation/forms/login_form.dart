@@ -7,22 +7,12 @@ part 'login_form.gform.dart';
 
 @freezed
 @Rf()
-class LoginForm with _$LoginForm {
+abstract class LoginForm with _$LoginForm {
   factory LoginForm({
-    @RfControl(
-      validators: [
-        RequiredValidator(),
-        MinLengthValidator(3),
-      ],
-    )
+    @RfControl(validators: [RequiredValidator(), MinLengthValidator(3)])
     @Default('')
     String username,
-    @RfControl(
-      validators: [
-        RequiredValidator(),
-        MinLengthValidator(6),
-      ],
-    )
+    @RfControl(validators: [RequiredValidator(), MinLengthValidator(6)])
     @Default('')
     String password,
   }) = _LoginForm;

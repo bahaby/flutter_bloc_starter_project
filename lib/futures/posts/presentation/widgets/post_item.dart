@@ -9,10 +9,7 @@ import '../../../../core/utils/router.gr.dart';
 class PostItem extends StatelessWidget {
   final PostModel post;
 
-  const PostItem({
-    super.key,
-    required this.post,
-  });
+  const PostItem({super.key, required this.post});
 
   @override
   Widget build(BuildContext context) {
@@ -28,7 +25,7 @@ class PostItem extends StatelessWidget {
           borderRadius: BorderRadius.circular(8),
           boxShadow: [
             BoxShadow(
-              color: Theme.of(context).shadowColor.withOpacity(0.1),
+              color: Theme.of(context).shadowColor.withValues(alpha: 0.1),
               blurRadius: 10,
               offset: const Offset(0, 2),
             ),
@@ -42,13 +39,10 @@ class PostItem extends StatelessWidget {
               style: const TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
             ),
             const SizedBox(height: 5),
-            Text(
-              post.body,
-              style: const TextStyle(fontSize: 14),
-            ),
+            Text(post.body, style: const TextStyle(fontSize: 14)),
             const SizedBox(height: 5),
             Text(
-              '${context.tr.posts.reactions}: ${post.reactions}',
+              '${context.tr.posts.reactions}: ${post.reactions.likes}',
               style: const TextStyle(fontSize: 14, fontWeight: FontWeight.bold),
             ),
             const SizedBox(height: 5),
