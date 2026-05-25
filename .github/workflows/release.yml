@@ -18,7 +18,7 @@ jobs:
         with:
           flutter-version: '3.44.0'
           cache: true
-          
+
       - name: Set up JDK 17
         uses: actions/setup-java@v4
         with:
@@ -38,6 +38,20 @@ jobs:
 
       - name: Install Project Dependencies
         run: flutter pub get
+      # Run all code generation tools (one-time build execution)
+      - name: Run Build Runner Code Generation (Freezed, JSON, Slang)
+        run: |
+          dart run build_runner build -d
+
+      # Generate visual branding assets (Icons & Splash Screen)
+      - name: Generate Visual Branding Assets
+        run: |
+          dart run flutter_launcher_icons
+          dart run flutter_native_splash:create
+
+      # Dynamically update App Name and Package ID configuration
+      - name: Rename Package Configuration
+        run: dart run package_rename
 
       # Run Fastlane, passing the variables directly into its environment
       - name: Execute Fastlane
