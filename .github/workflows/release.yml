@@ -59,7 +59,7 @@ jobs:
         working-directory: android
         run: |
           bundle install
-          bundle exec fastlane beta_github
+          bundle exec fastlane test_google_json
         env:
           KEYSTORE_PASSWORD: ${{ secrets.KEYSTORE_PASSWORD }}
           KEY_ALIAS: ${{ secrets.KEY_ALIAS }}
