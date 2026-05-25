@@ -35,6 +35,9 @@ platform :android do
   
   lane :beta_github do
     keystore_absolute_path = File.expand_path("../app/my-release-key.jks")
+    properties_path = File.expand_path("../local.properties")
+    local_props = PropertiesReader.new(properties_path) rescue {} # Fallback helper
+
     # 1. Compile and Sign the AAB in a single step using injected properties
     build_android_app(
       task: "bundle",
@@ -44,7 +47,9 @@ platform :android do
         "android.injected.signing.store.file"     => keystore_absolute_path,
         "android.injected.signing.store.password" => ENV["KEYSTORE_PASSWORD"],
         "android.injected.signing.key.alias"      => ENV["KEY_ALIAS"],
-        "android.injected.signing.key.password"   => ENV["KEY_PASSWORD"]
+        "android.injected.signing.key.password"   => ENV["KEY_PASSWORD"],
+        "android.injected.bundle.versionCode"     => local_props["flutter.versionCode"],
+        "android.injected.version.name"           => local_props["flutter.versionName"]
       }
     )
 
