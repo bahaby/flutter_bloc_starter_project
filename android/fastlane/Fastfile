@@ -57,8 +57,7 @@ platform :android do
   end
   lane :test_google_json do
     # This action explicitly tests the API token configuration
-    validate_play_store_json_key(
-      json_key: "using_data_instead",      # Injects dummy data to bypass path verification
+    validate_play_store_json_key(     # Injects dummy data to bypass path verification
       json_key_data: ENV["PLAY_STORE_CONFIG_JSON"]
     )
     UI.success("Success! Your JSON key configuration is perfectly valid.")
