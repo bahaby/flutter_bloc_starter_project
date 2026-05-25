@@ -58,6 +58,13 @@ lib/core/generated
 # Hide environment files
 # .env.*
 
+# Override inner .gitignore in android/
+
+!android/gradlew
+!android/gradlew.bat
+!android/gradle/wrapper/gradle-wrapper.jar
+!android/gradle/wrapper/gradle-wrapper.properties
+
 # FVM Version Cache
 .fvm/
 ..
