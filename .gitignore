@@ -64,6 +64,7 @@ lib/core/generated
 !android/gradlew.bat
 !android/gradle/wrapper/gradle-wrapper.jar
 !android/gradle/wrapper/gradle-wrapper.properties
+!android/local.properties
 
 # FVM Version Cache
 .fvm/
