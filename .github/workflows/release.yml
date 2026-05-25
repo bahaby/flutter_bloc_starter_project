@@ -3,7 +3,7 @@ name: Android Fastlane Release
 on:
   push:
     branches:
-      - main
+      - fastlane_test
 
 jobs:
   distribute:
@@ -33,7 +33,9 @@ jobs:
       # Run Fastlane, passing the variables directly into its environment
       - name: Execute Fastlane
         working-directory: android
-        run: bundle exec fastlane beta_github
+        run: |
+          bundle install
+          bundle exec fastlane beta_github
         env:
           KEYSTORE_PASSWORD: ${{ secrets.KEYSTORE_PASSWORD }}
           KEY_ALIAS: ${{ secrets.KEY_ALIAS }}
