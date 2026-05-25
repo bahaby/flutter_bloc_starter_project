@@ -30,6 +30,9 @@ jobs:
       - name: Reconstruct Keystore File
         run: echo "${{ secrets.KEYSTORE_BASE64 }}" | base64 --decode > android/app/my-release-key.jks
 
+      - name: Install Project Dependencies
+        run: flutter pub get
+        
       # Run Fastlane, passing the variables directly into its environment
       - name: Execute Fastlane
         working-directory: android
