@@ -1,4 +1,16 @@
-      # Run Fastlane, passing the variables directly into its environment
+name: Android Fastlane Release
+
+on:
+  push:
+    branches:
+      - fastlane_test
+
+jobs:
+  distribute:
+    runs-on: ubuntu-latest
+
+    steps:
+          # Run Fastlane, passing the variables directly into its environment
       - name: Execute Fastlane
         working-directory: android
         run: |
@@ -18,3 +30,4 @@
           KEY_ALIAS: ${{ secrets.KEY_ALIAS }}
           KEY_PASSWORD: ${{ secrets.KEY_PASSWORD }}
           PLAY_STORE_CONFIG_JSON: ${{ secrets.PLAY_STORE_CONFIG_JSON }}
+
