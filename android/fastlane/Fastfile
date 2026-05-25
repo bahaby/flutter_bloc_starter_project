@@ -35,6 +35,7 @@ platform :android do
   
   lane :beta_github do
     keystore_absolute_path = File.expand_path("../app/my-release-key.jks")
+    abb_path = File.expand_path("../../build/app/outputs/bundle/release/app-release.aab")
     # 1. Compile and Sign the AAB in a single step using injected properties
     build_android_app(
       task: "bundle",
@@ -47,8 +48,6 @@ platform :android do
         "android.injected.signing.key.password"   => ENV["KEY_PASSWORD"]
       }
     )
-    aab_path = Actions.lane_context[SharedValues::GRADLE_AAB_OUTPUT_PATH] || Dir["../app/build/outputs/**/*.aab"].first
-    raise "AAB not found" unless aab_path && File.exist?(aab_path)
 
     # 2. Upload the newly signed AAB to Google Play Store
     upload_to_play_store(
