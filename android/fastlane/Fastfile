@@ -35,7 +35,6 @@ platform :android do
   
   lane :beta_github do
     keystore_absolute_path = File.expand_path("../app/my-release-key.jks")
-    abb_path = File.expand_path("../../build/app/outputs/bundle/release/app-release.aab")
     # 1. Compile and Sign the AAB in a single step using injected properties
     build_android_app(
       task: "bundle",
@@ -50,6 +49,8 @@ platform :android do
     )
 
     # 2. Upload the newly signed AAB to Google Play Store
+
+    abb_path = File.expand_path("../../build/app/outputs/bundle/release/app-release.aab")
     upload_to_play_store(
       track: 'internal',
       json_key_data: ENV["PLAY_STORE_CONFIG_JSON"],
