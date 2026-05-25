@@ -28,12 +28,11 @@ jobs:
 
       # Native shell command to place the keystore file into the workspace securely
       - name: Reconstruct Keystore File
-        run: |
-          mkdir -p app
-          echo "${{ secrets.UPLOAD_KEYSTORE_BASE64 }}" | base64 --decode > app/my-release-key.jks
+        run: echo "${{ secrets.KEYSTORE_BASE64 }}" | base64 --decode > app/my-release-key.jks
 
       # Run Fastlane, passing the variables directly into its environment
       - name: Execute Fastlane
+        working-directory: android
         run: bundle exec fastlane beta_github
         env:
           KEYSTORE_PASSWORD: ${{ secrets.KEYSTORE_PASSWORD }}
