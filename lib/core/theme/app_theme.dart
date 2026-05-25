@@ -1,4 +1,3 @@
-import 'package:dynamic_color/dynamic_color.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 
@@ -7,26 +6,24 @@ import 'color/app_color_scheme.dart';
 import 'text/app_text_theme.dart';
 import 'text/app_typography.dart';
 
-Future<ThemeData> createTheme({
-  Color? color,
-  required Brightness brightness,
-}) async {
-  final colorScheme = _getColorScheme(color: color, brightness: brightness);
-  final dynamicColorScheme = await _getDynamicColors(brightness: brightness);
+ThemeData createTheme({Color? color, required ThemeMode mode}) {
+  final colorScheme = _getColorScheme(color: color, mode: mode);
   final appColorScheme = _getAppColorScheme(
     color: color,
     colorScheme: colorScheme,
-    dynamicColorScheme: dynamicColorScheme,
-    brightness: brightness,
+    mode: mode,
   );
 
-  final appTypography =
-      AppTypography.create(fontFamily: constants.theme.defaultFontFamily);
-  final textTheme =
-      _getTextTheme(appTypography: appTypography, brightness: brightness);
+  final appTypography = AppTypography.create(
+    fontFamily: constants.theme.defaultFontFamily,
+  );
+  final textTheme = _getTextTheme(appTypography: appTypography, mode: mode);
 
   final primaryColor = ElevationOverlay.colorWithOverlay(
-      appColorScheme.surface, appColorScheme.primary, 3);
+    appColorScheme.surface,
+    appColorScheme.primary,
+    3,
+  );
   final customOnPrimaryColor = appColorScheme.primary.withValues(alpha: 0.5);
 
   return ThemeData(
@@ -40,7 +37,7 @@ Future<ThemeData> createTheme({
     appBarTheme: AppBarTheme(
       elevation: constants.theme.defaultElevation,
       systemOverlayStyle: createOverlayStyle(
-        brightness: brightness,
+        brightness: appColorScheme.brightness,
         primaryColor: primaryColor,
       ),
     ),
@@ -50,23 +47,20 @@ Future<ThemeData> createTheme({
       elevation: constants.theme.defaultElevation,
       highlightElevation: constants.theme.defaultElevation,
     ),
-    iconTheme: IconThemeData(
-      color: appColorScheme.primary,
-    ),
+    iconTheme: IconThemeData(color: appColorScheme.primary),
     cardTheme: CardThemeData(
       elevation: constants.theme.defaultElevation,
       color: primaryColor,
       shape: RoundedRectangleBorder(
         borderRadius: BorderRadius.all(
-          Radius.circular(
-            constants.theme.defaultBorderRadius,
-          ),
+          Radius.circular(constants.theme.defaultBorderRadius),
         ),
       ),
     ),
     checkboxTheme: CheckboxThemeData(
-      fillColor:
-          WidgetStateProperty.resolveWith<Color?>((Set<WidgetState> states) {
+      fillColor: WidgetStateProperty.resolveWith<Color?>((
+        Set<WidgetState> states,
+      ) {
         if (states.contains(WidgetState.disabled)) {
           return null;
         }
@@ -79,21 +73,20 @@ Future<ThemeData> createTheme({
     inputDecorationTheme: InputDecorationTheme(
       disabledBorder: UnderlineInputBorder(
         borderRadius: BorderRadius.all(
-            Radius.circular(constants.theme.defaultBorderRadius)),
-        borderSide: const BorderSide(
-          style: BorderStyle.none,
+          Radius.circular(constants.theme.defaultBorderRadius),
         ),
+        borderSide: const BorderSide(style: BorderStyle.none),
       ),
       enabledBorder: UnderlineInputBorder(
         borderRadius: BorderRadius.all(
-            Radius.circular(constants.theme.defaultBorderRadius)),
-        borderSide: const BorderSide(
-          style: BorderStyle.none,
+          Radius.circular(constants.theme.defaultBorderRadius),
         ),
+        borderSide: const BorderSide(style: BorderStyle.none),
       ),
       errorBorder: UnderlineInputBorder(
         borderRadius: BorderRadius.all(
-            Radius.circular(constants.theme.defaultBorderRadius)),
+          Radius.circular(constants.theme.defaultBorderRadius),
+        ),
         borderSide: BorderSide(
           color: constants.palette.red.withValues(alpha: 0.3),
           width: 4,
@@ -101,7 +94,8 @@ Future<ThemeData> createTheme({
       ),
       focusedErrorBorder: UnderlineInputBorder(
         borderRadius: BorderRadius.all(
-            Radius.circular(constants.theme.defaultBorderRadius)),
+          Radius.circular(constants.theme.defaultBorderRadius),
+        ),
         borderSide: BorderSide(
           color: constants.palette.red.withValues(alpha: 0.3),
           width: 4,
@@ -109,7 +103,8 @@ Future<ThemeData> createTheme({
       ),
       focusedBorder: UnderlineInputBorder(
         borderRadius: BorderRadius.all(
-            Radius.circular(constants.theme.defaultBorderRadius)),
+          Radius.circular(constants.theme.defaultBorderRadius),
+        ),
         borderSide: BorderSide(
           color: constants.palette.green.withValues(alpha: 0.5),
           width: 4,
@@ -119,8 +114,9 @@ Future<ThemeData> createTheme({
       errorMaxLines: 2,
     ),
     radioTheme: RadioThemeData(
-      fillColor:
-          WidgetStateProperty.resolveWith<Color?>((Set<WidgetState> states) {
+      fillColor: WidgetStateProperty.resolveWith<Color?>((
+        Set<WidgetState> states,
+      ) {
         if (states.contains(WidgetState.disabled)) {
           return null;
         }
@@ -131,8 +127,9 @@ Future<ThemeData> createTheme({
       }),
     ),
     switchTheme: SwitchThemeData(
-      thumbColor:
-          WidgetStateProperty.resolveWith<Color?>((Set<WidgetState> states) {
+      thumbColor: WidgetStateProperty.resolveWith<Color?>((
+        Set<WidgetState> states,
+      ) {
         if (states.contains(WidgetState.disabled)) {
           return null;
         }
@@ -141,8 +138,9 @@ Future<ThemeData> createTheme({
         }
         return null;
       }),
-      trackColor:
-          WidgetStateProperty.resolveWith<Color?>((Set<WidgetState> states) {
+      trackColor: WidgetStateProperty.resolveWith<Color?>((
+        Set<WidgetState> states,
+      ) {
         if (states.contains(WidgetState.disabled)) {
           return null;
         }
@@ -165,48 +163,31 @@ SystemUiOverlayStyle createOverlayStyle({
     systemNavigationBarColor: primaryColor,
     systemNavigationBarContrastEnforced: false,
     systemStatusBarContrastEnforced: false,
-    systemNavigationBarIconBrightness:
-        isDark ? Brightness.light : Brightness.dark,
+    systemNavigationBarIconBrightness: isDark
+        ? Brightness.light
+        : Brightness.dark,
     statusBarColor: Colors.transparent,
     statusBarIconBrightness: isDark ? Brightness.light : Brightness.dark,
     statusBarBrightness: isDark ? Brightness.dark : Brightness.light,
   );
 }
 
-Future<ColorScheme?> _getDynamicColors({required Brightness brightness}) async {
-  try {
-    final corePalette = await DynamicColorPlugin.getCorePalette();
-
-    return corePalette?.toColorScheme(brightness: brightness);
-  } on PlatformException {
-    return Future.value();
-  }
-}
-
-ColorScheme _getColorScheme({
-  Color? color,
-  required Brightness brightness,
-}) {
+ColorScheme _getColorScheme({Color? color, required ThemeMode mode}) {
   return ColorScheme.fromSeed(
     seedColor: color ?? constants.theme.defaultThemeColor,
-    brightness: brightness,
+    brightness: mode == ThemeMode.dark ? Brightness.dark : Brightness.light,
   );
 }
 
 AppColorScheme _getAppColorScheme({
   Color? color,
   required ColorScheme colorScheme,
-  ColorScheme? dynamicColorScheme,
-  required Brightness brightness,
+  required ThemeMode mode,
 }) {
-  final isDark = brightness == Brightness.dark;
+  final isDark = mode == ThemeMode.dark;
 
   return AppColorScheme.fromMaterialColorScheme(
-    color != null
-        ? colorScheme
-        : constants.theme.tryToGetColorPaletteFromWallpaper
-            ? dynamicColorScheme ?? colorScheme
-            : colorScheme,
+    colorScheme,
     disabled: constants.palette.grey,
     onDisabled: isDark ? constants.palette.white : constants.palette.black,
   );
@@ -214,9 +195,7 @@ AppColorScheme _getAppColorScheme({
 
 AppTextTheme _getTextTheme({
   required AppTypography appTypography,
-  required Brightness brightness,
+  required ThemeMode mode,
 }) {
-  return brightness == Brightness.dark
-      ? appTypography.white
-      : appTypography.black;
+  return mode == ThemeMode.dark ? appTypography.white : appTypography.black;
 }

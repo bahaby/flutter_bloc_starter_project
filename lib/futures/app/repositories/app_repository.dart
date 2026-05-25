@@ -1,7 +1,7 @@
 import 'dart:async';
 
+import 'package:flutter/material.dart';
 import 'package:flutter_bloc_starter_project/futures/app/models/auth_model.dart';
-import 'package:flutter_bloc_starter_project/futures/app/presentation/blocs/app_bloc.dart';
 import 'package:flutter_bloc_starter_project/futures/auth/repositories/auth_repository.dart';
 
 import '../../../core/generated/translations.g.dart';
@@ -31,6 +31,8 @@ abstract interface class AppRepository {
   Future<Either<AlertModel, void>> logout();
   void setGlobalState({required GlobalState state});
   void setLocale({required AppLocale locale});
+  void setThemeMode({required ThemeMode mode});
+  void setThemeColor({required Color color});
   void setFirstLaunch();
   void setFirstLogin();
   void setOnboardingCompleted();
@@ -41,6 +43,8 @@ abstract interface class AppRepository {
   Stream<AuthModel?> get loggedUser;
   Stream<AuthStatus> get authStatus;
   AppLocale get locale;
+  ThemeMode get themeMode;
+  Color get themeColor;
   bool get isFirstLaunch;
   bool get isFirstLogin;
   bool get onboardingCompleted;
@@ -79,6 +83,12 @@ class AppRepositoryImpl implements AppRepository {
     final languageCode = _appPreferences.languageCode;
     return AppLocaleUtils.parseLocaleParts(languageCode: languageCode);
   }
+
+  @override
+  ThemeMode get themeMode => _appPreferences.themeMode;
+
+  @override
+  Color get themeColor => _appPreferences.themeColor;
 
   @override
   Future<Either<AlertModel, void>> initializeTranslationOverrides() async {
@@ -121,6 +131,16 @@ class AppRepositoryImpl implements AppRepository {
   @override
   void setFirstLogin() {
     _appPreferences.saveIsFirstLogin(false);
+  }
+
+  @override
+  void setThemeMode({required ThemeMode mode}) {
+    _appPreferences.saveThemeMode(mode);
+  }
+
+  @override
+  void setThemeColor({required Color color}) {
+    _appPreferences.saveThemeColor(color);
   }
 
   @override

@@ -38,7 +38,7 @@ class Constants {
 
   /// Debug configuration.
   final debug = _Debug();
-/* 
+  /* 
   /// Navigation configuration.
    final navigation = _Navigation(); */
 }
@@ -48,9 +48,7 @@ class _Validation {
   final emailRegExp = RegExp(
     r'^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$',
   );
-  final passwordRegExp = RegExp(
-    r'^(?=.*[A-Za-z])(?=.*\d)[A-Za-z\d]{8,}$',
-  );
+  final passwordRegExp = RegExp(r'^(?=.*[A-Za-z])(?=.*\d)[A-Za-z\d]{8,}$');
 
   final passwordMinLength = 6;
   final passwordMaxLength = 128;
@@ -98,6 +96,8 @@ class _CacheKeys {
   final String isFirstLogin = 'isFirstLogin';
   final String isFirstLaunchApp = 'isFirstLaunchApp';
   final String languageCode = 'languageCode';
+  final String themeColor = 'themeColor';
+  final String themeMode = 'themeMode';
   final String onboardingCompleted = 'onboardingCompleted';
 }
 
@@ -105,21 +105,21 @@ class _CacheKeys {
 class _Shadows {
   final textSoft = [
     Shadow(
-      color: Colors.black.withOpacity(0.25),
+      color: Colors.black.withValues(alpha: 0.25),
       offset: const Offset(0, 2),
       blurRadius: 4,
     ),
   ];
   final text = [
     Shadow(
-      color: Colors.black.withOpacity(0.6),
+      color: Colors.black.withValues(alpha: 0.6),
       offset: const Offset(0, 2),
       blurRadius: 2,
     ),
   ];
   final textStrong = [
     Shadow(
-      color: Colors.black.withOpacity(0.6),
+      color: Colors.black.withValues(alpha: 0.6),
       offset: const Offset(0, 4),
       blurRadius: 6,
     ),

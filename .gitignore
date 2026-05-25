@@ -60,3 +60,6 @@ lib/core/generated
 
 # FVM Version Cache
 .fvm/
+..
+# secret files
+secrets/**/*

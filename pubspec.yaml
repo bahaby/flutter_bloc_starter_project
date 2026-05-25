@@ -1,7 +1,9 @@
 name: flutter_bloc_starter_project
 description: "A new Flutter project."
 publish_to: 'none'
-version: 0.1.0
+version: 0.1.2+3
+
+
 
 
 environment:
@@ -28,9 +30,7 @@ dependencies:
   injectable: ^3.0.0
   internet_connection_checker_plus: ^3.0.0
   hive: ^2.2.3
-  hydrated_bloc: ^11.0.0
   json_annotation: ^4.12.0
-  json_theme: ^11.0.0
   logger: ^2.7.0
   path_provider: ^2.1.5
   permission_handler: ^12.0.1
@@ -97,18 +97,17 @@ flutter_native_splash:
   color_dark: "#000000"
   image_dark: assets/images/splash/logo_dark.png
   android_12:
-    image: assets/images/splash/logo_light.png
+    image: assets/images/splash/android.png
     icon_background_color: "#ffffff"
-    image_dark: assets/images/splash/logo_dark.png
+    image_dark: assets/images/splash/android.png
     icon_background_color_dark: "#000000"
   fullscreen: true
-
 package_rename_config:
   android:
     app_name: Starter App # (String) The display name of the android app
-    package_name: com.starter.app # (String) The package name of the android app
+    package_name: com.baha_test.app # (String) The package name of the android app
 
   ios:
     app_name: Starter App # (String) The display name of the ios app
-    bundle_name: com.starter.app # (String) The bundle name of the ios app
+    bundle_name: com.baha_test.app # (String) The bundle name of the ios app
     package_name: # (String) The product bundle identifier of the ios app

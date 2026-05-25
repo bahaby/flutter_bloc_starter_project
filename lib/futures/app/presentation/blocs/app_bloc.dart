@@ -8,10 +8,9 @@ import 'package:flutter_bloc_starter_project/futures/auth/repositories/auth_repo
 import '../../../../core/generated/translations.g.dart';
 import '../../models/alert_model.dart';
 import 'package:freezed_annotation/freezed_annotation.dart';
-import 'package:hydrated_bloc/hydrated_bloc.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:injectable/injectable.dart';
 import 'package:internet_connection_checker_plus/internet_connection_checker_plus.dart';
-import '../../models/theme_model.dart';
 import '../../../../core/modules/dependency_injection/di.dart';
 import '../../../../core/theme/app_theme.dart';
 import '../../repositories/app_repository.dart';
@@ -21,15 +20,23 @@ part 'app_event.dart';
 part 'app_state.dart';
 
 @lazySingleton
-class AppBloc extends HydratedBloc<AppEvent, AppState>
-    with WidgetsBindingObserver {
+class AppBloc extends Bloc<AppEvent, AppState> with WidgetsBindingObserver {
   final AppRepository _appRepository;
   final InternetConnection _networkInfo;
   StreamSubscription<InternetStatus>? _networkInfoSubscription;
   late StreamSubscription<GlobalState> _globalStateSubscription;
   late StreamSubscription<AuthModel?> _userSubscription;
   AppBloc({required this._appRepository, required this._networkInfo})
-    : super(AppState.initial()) {
+    : super(
+        AppState.initial().copyWith(
+          isFirstLaunch: _appRepository.isFirstLaunch,
+          isFirstLogin: _appRepository.isFirstLogin,
+          onboardingCompleted: _appRepository.onboardingCompleted,
+          themeMode: _appRepository.themeMode,
+          color: _appRepository.themeColor,
+          locale: _appRepository.locale,
+        ),
+      ) {
     WidgetsBinding.instance.addObserver(this);
     _globalStateSubscription = _appRepository.globalState.listen((event) {
       add(AppEvent.globalStateChanged(event));
@@ -47,15 +54,6 @@ class AppBloc extends HydratedBloc<AppEvent, AppState>
       switch (event) {
         case _Started():
           _appRepository.initializeAuthStatus();
-          final locale = _appRepository.locale;
-          _changeLocale(locale, emit);
-          emit(
-            state.copyWith(
-              isFirstLaunch: _appRepository.isFirstLaunch,
-              isFirstLogin: _appRepository.isFirstLogin,
-              onboardingCompleted: _appRepository.onboardingCompleted,
-            ),
-          );
           //await _appRepository.initializeTranslationOverrides();
 
           break;
@@ -68,10 +66,10 @@ class AppBloc extends HydratedBloc<AppEvent, AppState>
           _changeLocale(locale, emit);
           break;
         case _ChangeThemeMode(mode: ThemeMode mode):
-          await _changeThemeMode(mode, emit);
+          _changeThemeMode(mode, emit);
           break;
         case _ChangeThemeColor(color: Color color):
-          await _changeThemeColor(color, emit);
+          _changeThemeColor(color, emit);
           break;
         case _FirstLaunchCompleted():
           _appRepository.setFirstLaunch();
@@ -102,24 +100,9 @@ class AppBloc extends HydratedBloc<AppEvent, AppState>
   }
 
   @override
-  AppState? fromJson(Map<String, dynamic> json) {
-    try {
-      final themeModel = ThemeModel.fromJson(json['theme']);
-      return state.copyWith(theme: themeModel);
-    } catch (_) {
-      return null;
-    }
-  }
-
-  @override
-  Map<String, dynamic>? toJson(AppState state) {
-    return {'theme': state.theme.toJson()};
-  }
-
-  @override
   Future<void> didChangePlatformBrightness() async {
     super.didChangePlatformBrightness();
-    _updateSystemOverlay();
+    //_updateSystemOverlay();
   }
 
   @override
@@ -149,32 +132,19 @@ class AppBloc extends HydratedBloc<AppEvent, AppState>
   }
 
   Future<void> _changeThemeMode(ThemeMode mode, Emitter<AppState> emit) async {
-    if (mode == ThemeMode.system) {
-      final theme = ThemeModel(
-        mode: ThemeMode.system,
-        light: await createTheme(brightness: Brightness.light),
-        dark: await createTheme(brightness: Brightness.dark),
-      );
-      emit(state.copyWith(theme: theme));
-    } else {
-      emit(state.copyWith(theme: state.theme.copyWith(mode: mode)));
-    }
+    _appRepository.setThemeMode(mode: mode);
+    emit(state.copyWith(themeMode: mode));
 
-    _updateSystemOverlay();
+    //_updateSystemOverlay();
   }
 
-  Future<void> _changeThemeColor(Color color, Emitter<AppState> emit) async {
-    final theme = ThemeModel(
-      mode: state.theme.mode,
-      light: await createTheme(color: color, brightness: Brightness.light),
-      dark: await createTheme(color: color, brightness: Brightness.dark),
-    );
-
-    emit(state.copyWith(theme: theme));
-    _updateSystemOverlay();
+  void _changeThemeColor(Color color, Emitter<AppState> emit) {
+    _appRepository.setThemeColor(color: color);
+    emit(state.copyWith(color: color));
+    //_updateSystemOverlay();
   }
 
-  void _updateSystemOverlay() {
+  /* void _updateSystemOverlay() {
     final systemModeIsDark =
         PlatformDispatcher.instance.platformBrightness == Brightness.dark;
     final isDark = state.theme.mode == ThemeMode.system
@@ -195,7 +165,7 @@ class AppBloc extends HydratedBloc<AppEvent, AppState>
         primaryColor: primaryColor,
       ),
     );
-  }
+  } */
 
   @override
   Future<void> close() {

@@ -1,13 +1,11 @@
 import 'dart:async';
 import 'dart:io';
 
-import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_native_splash/flutter_native_splash.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
-import 'package:hydrated_bloc/hydrated_bloc.dart';
-import 'package:path_provider/path_provider.dart';
 import 'package:sentry_flutter/sentry_flutter.dart';
 
 import 'core/generated/translations.g.dart';
@@ -50,16 +48,11 @@ Future<void> main() async {
       // Inits sentry for error tracking.
       await initializeSentry();
 
-      // Set bloc observer and hydrated bloc storage.
+      // Set bloc observer
       Bloc.observer = CustomBlocObserver();
-      HydratedBloc.storage = await HydratedStorage.build(
-        storageDirectory: kIsWeb
-            ? HydratedStorageDirectory.web
-            : HydratedStorageDirectory((await getTemporaryDirectory()).path),
-      );
 
       return runApp(
-        // Sentrie's performance tracing for AssetBundles.
+        // Sentry's performance tracing for AssetBundles.
         DefaultAssetBundle(
           bundle: SentryAssetBundle(),
           child: ScreenUtilInit(

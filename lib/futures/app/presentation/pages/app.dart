@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_bloc_starter_project/core/modules/dependency_injection/di.dart';
+import 'package:flutter_bloc_starter_project/core/theme/app_theme.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
 import '../../../../core/generated/translations.g.dart';
 import '../blocs/app_bloc.dart';
@@ -17,13 +18,12 @@ class App extends StatelessWidget {
     return BlocProvider(
       create: (context) => di<AppBloc>(),
       child: BlocBuilder<AppBloc, AppState>(
-        buildWhen: (p, c) => p.theme != c.theme,
         builder: (context, state) {
           return MaterialApp.router(
             /// Theme configuration.
-            theme: state.theme.light,
-            darkTheme: state.theme.dark,
-            themeMode: state.theme.mode,
+            theme: createTheme(color: state.color, mode: state.themeMode),
+            darkTheme: createTheme(color: state.color, mode: ThemeMode.dark),
+            themeMode: state.themeMode,
 
             /// Environment configuration.
             title: constants.appTitle,

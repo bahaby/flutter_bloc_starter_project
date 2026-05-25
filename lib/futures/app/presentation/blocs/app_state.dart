@@ -11,7 +11,10 @@ abstract class AppState with _$AppState {
     required GlobalState globalState,
     required bool isInternetConnected,
     required AppLocale locale,
-    required ThemeModel theme,
+
+    required Color color,
+    required ThemeMode themeMode,
+
     AlertModel? alert,
   }) = _AppState;
 
@@ -20,7 +23,8 @@ abstract class AppState with _$AppState {
     isFirstLogin: true,
     onboardingCompleted: false,
     authStatus: AuthStatus.initial,
-    theme: di<ThemeModel>(),
+    color: Colors.blue,
+    themeMode: ThemeMode.dark,
     globalState: GlobalState.loaded,
     isInternetConnected: true,
     locale: AppLocale.en,
