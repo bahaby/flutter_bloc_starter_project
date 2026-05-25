@@ -33,10 +33,50 @@ platform :android do
     )
   end
   
+  lane :local_p do
+    # Points directly to the local.properties file inside the android/ folder
+    properties_path = File.expand_path("../../local.properties", __FILE__)
+    
+    version_code = nil
+    version_name = nil
+
+    if File.exist?(properties_path)
+      File.foreach(properties_path) do |line|
+        if line.start_with?("flutter.versionCode=")
+          version_code = line.split("=").last.strip
+        elsif line.start_with?("flutter.versionName=")
+          version_name = line.split("=").last.strip
+        end
+      end
+    else
+      UI.error("Could not find local.properties file at path: #{properties_path}")
+    end
+
+    puts "========================================"
+    puts "Version Code: #{version_code}"
+    puts "Version Name: #{version_name}"
+    puts "========================================"
+  end
+
   lane :beta_github do
     keystore_absolute_path = File.expand_path("../app/my-release-key.jks")
-    properties_path = File.expand_path("../local.properties")
-    local_props = PropertiesReader.new(properties_path) rescue {} # Fallback helper
+    
+    properties_path = File.expand_path("../../local.properties", __FILE__)
+    
+    version_code = nil
+    version_name = nil
+
+    if File.exist?(properties_path)
+      File.foreach(properties_path) do |line|
+        if line.start_with?("flutter.versionCode=")
+          version_code = line.split("=").last.strip
+        elsif line.start_with?("flutter.versionName=")
+          version_name = line.split("=").last.strip
+        end
+      end
+    else
+      UI.error("Could not find local.properties file at path: #{properties_path}")
+    end
 
     # 1. Compile and Sign the AAB in a single step using injected properties
     build_android_app(
@@ -48,8 +88,8 @@ platform :android do
         "android.injected.signing.store.password" => ENV["KEYSTORE_PASSWORD"],
         "android.injected.signing.key.alias"      => ENV["KEY_ALIAS"],
         "android.injected.signing.key.password"   => ENV["KEY_PASSWORD"],
-        "android.injected.bundle.versionCode"     => local_props["flutter.versionCode"],
-        "android.injected.version.name"           => local_props["flutter.versionName"]
+        "android.injected.version.code"           => version_code,
+        "android.injected.version.name"           => version_name
       }
     )
 
