@@ -4,6 +4,7 @@ on:
   push:
     branches:
       - fastlane_test
+      
 
 jobs:
   distribute:
