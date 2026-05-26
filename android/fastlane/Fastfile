@@ -58,7 +58,7 @@ platform :android do
     upload_to_play_store(
       track: 'internal',
       json_key_data: ENV["PLAY_STORE_CONFIG_JSON"],
-      aab: File.expand_path("../../build/app/outputs/bundle/release/app-release.aab"),
+      aab: File.expand_path("../build/app/outputs/bundle/release/app-release.aab"),
       skip_upload_metadata: true,
       skip_upload_changelogs: true,
       skip_upload_images: true,
