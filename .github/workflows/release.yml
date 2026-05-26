@@ -54,6 +54,13 @@ jobs:
       # Dynamically update App Name and Package ID configuration
       - name: Rename Package Configuration
         run: dart run package_rename
+      # Parse the version name from pubspec.yaml and inject it into the environment for Fastlane
+      - name: Parse Local Version Name from pubspec.yaml
+        id: parse_version
+        run: |
+          # Grabs the "version: X.Y.Z+A" line, strips spaces/prefixes, and splits everything before the "+"
+          VERSION_NAME=$(grep '^version: ' pubspec.yaml | sed 's/version: //' | cut -d'+' -f1)
+          echo "version_name=$VERSION_NAME" >> "$GITHUB_OUTPUT"
 
       # Run Fastlane, passing the variables directly into its environment
       - name: Execute Fastlane
@@ -66,3 +73,4 @@ jobs:
           KEY_ALIAS: ${{ secrets.KEY_ALIAS }}
           KEY_PASSWORD: ${{ secrets.KEY_PASSWORD }}
           PLAY_STORE_CONFIG_JSON: ${{ secrets.PLAY_STORE_CONFIG_JSON }}
+          VERSION_NAME: ${{ steps.parse_version.outputs.version_name }}

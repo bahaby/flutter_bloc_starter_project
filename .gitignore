@@ -70,6 +70,7 @@ lib/core/generated
 ..
 # secret files
 secrets/**/*
+.secrets
 
 # fastlane specific
 **/fastlane/report.xml

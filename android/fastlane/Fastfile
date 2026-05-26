@@ -32,71 +32,20 @@ platform :android do
       aab: '../build/app/outputs/bundle/release/app-release.aab'
     )
   end
-  
-  lane :local_p do
-    # Points directly to the local.properties file inside the android/ folder
-    properties_path2 = File.expand_path("../../local.properties", __FILE__)
-    properties_path = File.expand_path("../local.properties", __FILE__)
-    puts "Looking for local.properties at path: #{properties_path}"
-    puts "Looking for local.properties at path: #{properties_path2}"
-    
-    version_code = nil
-    version_name = nil
-
-    if File.exist?(properties_path)
-      File.foreach(properties_path) do |line|
-        if line.start_with?("flutter.versionCode=")
-          version_code = line.split("=").last.strip
-        elsif line.start_with?("flutter.versionName=")
-          version_name = line.split("=").last.strip
-        end
-      end
-    else
-      UI.error("Could not find local.properties file at path: #{properties_path}")
-    end
-
-    puts "========================================"
-    puts "Version Code: #{version_code}"
-    puts "Version Name: #{version_name}"
-    puts "========================================"
-  end
 
   lane :beta_github do
     keystore_absolute_path = File.expand_path("../app/my-release-key.jks")
     
-    properties_path = File.expand_path("../../local.properties", __FILE__)
-    
-    version_code = nil
-    version_name = nil
+    # 1. Fetch the highest active version code from Google Play
+    live_codes = google_play_track_version_codes(
+      package_name: 'com.baha_test.app',
+      json_key_data: ENV['PLAY_STORE_CONFIG_JSON'], # Matches your injected env variable
+      track: 'internal'
+    )
+    highest_code = live_codes.max || 0
+    next_code = highest_code + 1
 
-    if File.exist?(properties_path)
-      File.foreach(properties_path) do |line|
-        # Matches "version: 1.2.3+4", "  version: '1.2.3+4'", etc.
-        if line =~ /^\s*version:\s*['"]?([^\s'"]+)['"]?/
-          full_version = $1 # Extracts the actual version string (e.g., 1.0.2+4)
-          
-          if full_version.include?("+")
-            version_name = full_version.split("+").first
-            version_code = full_version.split("+").last
-          else
-            version_name = full_version
-            version_code = "1" 
-          end
-          break
-        end
-      end
-    else
-      UI.error("Could not find local.properties file at path: #{properties_path}")
-      puts "========================================"
-      puts "cannot find local.properties file at path: #{properties_path}"
-      puts "========================================"
-    end
-    puts "========================================"
-    puts "Version Code: #{version_code}"
-    puts "Version Name: #{version_name}"
-    puts "========================================"
-
-    # 1. Compile and Sign the AAB in a single step using injected properties
+    # 2. Compile and Sign the AAB in a single step using injected properties
     build_android_app(
       task: "bundle",
       build_type: "Release",
@@ -106,12 +55,12 @@ platform :android do
         "android.injected.signing.store.password" => ENV["KEYSTORE_PASSWORD"],
         "android.injected.signing.key.alias"      => ENV["KEY_ALIAS"],
         "android.injected.signing.key.password"   => ENV["KEY_PASSWORD"],
-        "android.injected.bundle.versionCode"     => version_code,
-        "android.injected.version.name"           => version_name,
+        "flutter.versionCode"                     => next_code.to_s,
+        "flutter.versionName"                     => ENV["MY_APP_VERSION_NAME"]
       }
     )
 
-    # 2. Upload the newly signed AAB to Google Play Store
+    # 3. Upload the newly signed AAB to Google Play Store
 
     upload_to_play_store(
       track: 'internal',
