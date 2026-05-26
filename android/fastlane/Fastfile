@@ -70,7 +70,7 @@ platform :android do
     version_name = nil
 
     if File.exist?(properties_path)
-      File.foreach(pubspec_path) do |line|
+      File.foreach(properties_path) do |line|
         # Matches "version: 1.2.3+4", "  version: '1.2.3+4'", etc.
         if line =~ /^\s*version:\s*['"]?([^\s'"]+)['"]?/
           full_version = $1 # Extracts the actual version string (e.g., 1.0.2+4)
