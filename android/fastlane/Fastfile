@@ -35,7 +35,10 @@ platform :android do
   
   lane :local_p do
     # Points directly to the local.properties file inside the android/ folder
-    properties_path = File.expand_path("../../local.properties", __FILE__)
+    properties_path2 = File.expand_path("../../local.properties", __FILE__)
+    properties_path = File.expand_path("../local.properties", __FILE__)
+    puts "Looking for local.properties at path: #{properties_path}"
+    puts "Looking for local.properties at path: #{properties_path2}"
     
     version_code = nil
     version_name = nil
