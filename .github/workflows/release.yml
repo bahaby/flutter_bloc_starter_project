@@ -71,6 +71,7 @@ jobs:
 
       # Run Fastlane, passing the variables directly into its environment
       - name: Execute Fastlane
+        working-directory: android
         run: |
           bundle install
           bundle exec fastlane beta_github
