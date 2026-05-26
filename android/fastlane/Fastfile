@@ -64,7 +64,7 @@ platform :android do
   lane :beta_github do
     keystore_absolute_path = File.expand_path("../app/my-release-key.jks")
     
-    properties_path = File.expand_path("../../local.properties", __FILE__)
+    properties_path = File.expand_path("../local.properties", __FILE__)
     
     version_code = nil
     version_name = nil
