@@ -113,7 +113,6 @@ platform :android do
 
     # 2. Upload the newly signed AAB to Google Play Store
 
-    abb_path = File.expand_path("../../build/app/outputs/bundle/release/app-release.aab", __dir__)
     upload_to_play_store(
       track: 'internal',
       json_key_data: ENV["PLAY_STORE_CONFIG_JSON"],
