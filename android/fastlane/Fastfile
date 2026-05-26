@@ -45,6 +45,9 @@ platform :android do
     highest_code = live_codes.max || 0
     next_code = highest_code + 1
 
+    puts "Current highest version code on Play Store: #{highest_code}"
+    puts "Next version code to use: #{next_code}"
+
     # 2. Compile and Sign the AAB in a single step using injected properties
     build_android_app(
       task: "bundle",
@@ -55,8 +58,8 @@ platform :android do
         "android.injected.signing.store.password" => ENV["KEYSTORE_PASSWORD"],
         "android.injected.signing.key.alias"      => ENV["KEY_ALIAS"],
         "android.injected.signing.key.password"   => ENV["KEY_PASSWORD"],
-        "android.injected.bundle.versionCode"     => next_code.to_s,
-        "android.injected.version.name"           => ENV["MY_APP_VERSION_NAME"]
+        "versionCode"                             => next_code.to_s,
+        "versionName"           => ENV["MY_APP_VERSION_NAME"]
       }
     )
 
