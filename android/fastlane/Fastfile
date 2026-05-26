@@ -64,17 +64,25 @@ platform :android do
   lane :beta_github do
     keystore_absolute_path = File.expand_path("../app/my-release-key.jks")
     
-    properties_path = File.expand_path("../local.properties", __FILE__)
+    properties_path = File.expand_path("../../local.properties", __FILE__)
     
     version_code = nil
     version_name = nil
 
     if File.exist?(properties_path)
-      File.foreach(properties_path) do |line|
-        if line.start_with?("flutter.versionCode=")
-          version_code = line.split("=").last.strip
-        elsif line.start_with?("flutter.versionName=")
-          version_name = line.split("=").last.strip
+      File.foreach(pubspec_path) do |line|
+        # Matches "version: 1.2.3+4", "  version: '1.2.3+4'", etc.
+        if line =~ /^\s*version:\s*['"]?([^\s'"]+)['"]?/
+          full_version = $1 # Extracts the actual version string (e.g., 1.0.2+4)
+          
+          if full_version.include?("+")
+            version_name = full_version.split("+").first
+            version_code = full_version.split("+").last
+          else
+            version_name = full_version
+            version_code = "1" 
+          end
+          break
         end
       end
     else
