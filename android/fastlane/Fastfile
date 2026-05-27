@@ -32,26 +32,37 @@ platform :android do
       aab: '../build/app/outputs/bundle/release/app-release.aab'
     )
   end
-  
-  lane :beta_github do
-    # 1. Compile and Sign the AAB in a single step using injected properties
-    build_android_app(
-      task: "bundle",
-      build_type: "Release",
-      print_command: false, # Prevents credentials from leaking into GitHub Action logs
-      properties: {
-        "android.injected.signing.store.file"     => "app/my-release-key.jks",
-        "android.injected.signing.store.password" => ENV["KEYSTORE_PASSWORD"],
-        "android.injected.signing.key.alias"      => ENV["KEY_ALIAS"],
-        "android.injected.signing.key.password"   => ENV["KEY_PASSWORD"]
-      }
-    )
 
-    # 2. Upload the newly signed AAB to Google Play Store
+  lane :beta_github do
+    # 1. Fetch the highest active version code from Google Play
+    live_codes = google_play_track_version_codes(
+      package_name: 'com.baha_test.app',
+      json_key_data: ENV['PLAY_STORE_CONFIG_JSON'], # Matches your injected env variable
+      track: 'internal'
+    )
+    highest_code = live_codes.max || 0
+    next_code = highest_code + 1
+
+    puts "Current highest version code on Play Store: #{highest_code}"
+    puts "Next version code to use: #{next_code}"
+
+    # 2. Compile and Sign the AAB in a single step 
+    sh(
+      "flutter build appbundle " \
+      "--release " \
+      "--build-name=#{ENV['VERSION_NAME']} " \
+      "--build-number=#{next_code} "
+    )
+    # 3. Upload the newly signed AAB to Google Play Store
+
     upload_to_play_store(
       track: 'internal',
       json_key_data: ENV["PLAY_STORE_CONFIG_JSON"],
-      aab: "app/build/outputs/bundle/release/app-release.aab"
+      aab: File.expand_path("../../build/app/outputs/bundle/release/app-release.aab"),
+      skip_upload_metadata: true,
+      skip_upload_changelogs: true,
+      skip_upload_images: true,
+      skip_upload_screenshots: true
     )
   end
 

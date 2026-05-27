@@ -3,7 +3,8 @@ name: Android Fastlane Release
 on:
   push:
     branches:
-      - main
+      - fastlane_test
+      
 
 jobs:
   distribute:
@@ -12,6 +13,12 @@ jobs:
     steps:
       - name: Checkout Code
         uses: actions/checkout@v4
+        
+      - name: Set up Flutter
+        uses: subosito/flutter-action@v2
+        with:
+          flutter-version: '3.44.0'
+          cache: true
 
       - name: Set up JDK 17
         uses: actions/setup-java@v4
@@ -30,12 +37,44 @@ jobs:
       - name: Reconstruct Keystore File
         run: echo "${{ secrets.KEYSTORE_BASE64 }}" | base64 --decode > android/app/my-release-key.jks
 
+      - name: Create key.properties File
+        run: |
+          echo "storePassword=${{ secrets.KEYSTORE_PASSWORD }}" > android/key.properties
+          echo "keyPassword=${{ secrets.KEY_PASSWORD }}" >> android/key.properties
+          echo "keyAlias=${{ secrets.KEY_ALIAS }}" >> android/key.properties
+          echo "storeFile=my-release-key.jks" >> android/key.properties
+
+      - name: Install Project Dependencies
+        run: flutter pub get
+      # Run all code generation tools (one-time build execution)
+      - name: Run Build Runner Code Generation (Freezed, JSON, Slang)
+        run: |
+          dart run build_runner build -d
+          dart run slang
+
+      # Generate visual branding assets (Icons & Splash Screen)
+      - name: Generate Visual Branding Assets
+        run: |
+          dart run flutter_launcher_icons
+          dart run flutter_native_splash:create
+
+      # Dynamically update App Name and Package ID configuration
+      - name: Rename Package Configuration
+        run: dart run package_rename
+      # Parse the version name from pubspec.yaml and inject it into the environment for Fastlane
+      - name: Parse Local Version Name from pubspec.yaml
+        id: parse_version
+        run: |
+          # Grabs the "version: X.Y.Z+A" line, strips spaces/prefixes, and splits everything before the "+"
+          VERSION_NAME=$(grep '^version: ' pubspec.yaml | sed 's/version: //' | cut -d'+' -f1)
+          echo "version_name=$VERSION_NAME" >> "$GITHUB_OUTPUT"
+
       # Run Fastlane, passing the variables directly into its environment
       - name: Execute Fastlane
         working-directory: android
-        run: bundle exec fastlane beta_github
+        run: |
+          bundle install
+          bundle exec fastlane beta_github
         env:
-          KEYSTORE_PASSWORD: ${{ secrets.KEYSTORE_PASSWORD }}
-          KEY_ALIAS: ${{ secrets.KEY_ALIAS }}
-          KEY_PASSWORD: ${{ secrets.KEY_PASSWORD }}
           PLAY_STORE_CONFIG_JSON: ${{ secrets.PLAY_STORE_CONFIG_JSON }}
+          VERSION_NAME: ${{ steps.parse_version.outputs.version_name }}
