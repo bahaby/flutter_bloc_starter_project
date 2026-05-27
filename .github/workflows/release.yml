@@ -3,8 +3,9 @@ name: Android Fastlane Release
 on:
   push:
     branches:
-      - fastlane_test
-      
+      - main
+      - dev
+      - future/*
 
 jobs:
   distribute:
